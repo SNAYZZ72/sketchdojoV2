@@ -115,9 +115,9 @@ export const Hero = () => {
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-24 overflow-hidden">
       {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-gray-50/80 to-gray-100/90 dark:from-sketchdojo-bg dark:to-black overflow-hidden">
+      <div className="absolute inset-0 bg-linear-to-b from-gray-50/80 to-gray-100/90 dark:from-sketchdojo-bg dark:to-black overflow-hidden">
         {/* Accent line at top */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sketchdojo-primary/80 via-sketchdojo-accent/80 to-sketchdojo-primary/80 bg-size-200 animate-gradient"></div>
+        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-sketchdojo-primary/80 via-sketchdojo-accent/80 to-sketchdojo-primary/80 bg-size-200 animate-gradient"></div>
       </div>
       
       {/* Hero content */}
@@ -131,7 +131,7 @@ export const Hero = () => {
           </div>
         </div>
         
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sketchdojo-primary via-gray-700 dark:via-white to-sketchdojo-accent">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-linear-to-r from-sketchdojo-primary via-gray-700 dark:via-white to-sketchdojo-accent">
           {t('Hero.title')}
         </h1>
         
@@ -409,7 +409,7 @@ export const Hero = () => {
         <div className="absolute bottom-1/4 -right-24 w-48 sm:w-64 h-48 sm:h-64 bg-sketchdojo-accent/5 dark:bg-sketchdojo-accent/20 rounded-full blur-3xl opacity-60 animate-pulse-slow animation-delay-1000"></div>
         <div className="absolute top-1/2 left-1/3 w-24 sm:w-32 h-24 sm:h-32 bg-sketchdojo-primary/3 dark:bg-sketchdojo-primary/10 rounded-full blur-xl opacity-60 animate-float"></div>
         <div className="absolute bottom-1/3 right-1/4 w-16 sm:w-20 h-16 sm:h-20 bg-sketchdojo-accent/3 dark:bg-sketchdojo-accent/10 rounded-full blur-xl opacity-40 animate-float animation-delay-2000"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-gray-100/5 to-transparent opacity-30 dark:opacity-0"></div>
+        <div className="absolute inset-0 bg-linear-to-tr from-gray-100/5 to-transparent opacity-30 dark:opacity-0"></div>
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-radial from-transparent to-gray-100/50 dark:to-black/90 opacity-70"></div>
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-5 dark:opacity-30"></div>
       </div>

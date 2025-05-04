@@ -26,21 +26,6 @@ export default {
     			ring: 'hsl(var(--ring))',
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
-    			roomify: {
-    				bg: '#12111A',
-    				text: '#FFFFFF',
-    				primary: '#6200EE',
-    				accent: '#FF4081',
-    				hover: '#7B1FA2',
-    				muted: '#6B7280',
-    				light: '#1E1B2C',
-    				card: '#1A1824',
-    				border: '#2D2B37',
-    				success: '#4CAF50',
-    				warning: '#FFC107',
-    				error: '#FF5252',
-    				surface: '#1E1B2C'
-    			},
     			// SketchDojo.AI specific colors
     			sketchdojo: {
     				primary: '#C23FDC',
