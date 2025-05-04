@@ -1,0 +1,50 @@
+{
+
+  "Navigation": {
+    "home": "Home",
+    "about": "About",
+    "features": "Features",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "login": "Log In",
+    "signup": "Sign Up",
+    "language": "Language",
+    "skipToContent": "Skip to content",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode"
+  },
+  "Hero": {
+    "tagline": "AI-Powered Manga Creation",
+    "title": "Idea to manga in seconds.",
+    "subtitle": "SketchDojo transforms your descriptions into professional manga art with AI—no drawing skills required",
+    "inputPlaceholder": "Describe your manga idea...",
+    "selectGenre": "Select a genre",
+    "selectGenreButton": "Select Genre",
+    "attach": "Attach",
+    "enhance": "Enhance",
+    "promptTips": "Prompt tips",
+    "promptTipsContent": "Be specific about your manga style, characters, setting, and mood for better results. Try including details about lighting, emotions, and action.",
+    "creating": "Creating...",
+    "createManga": "Create Manga",
+    "createGenreManga": "Create {genre} Manga",
+    "tryExamples": "Try these examples"
+  },
+  "Genres": {
+    "romance": {
+      "name": "Romance",
+      "description": "Stories focused on relationships and emotional connections"
+    },
+    "fantasy": {
+      "name": "Fantasy",
+      "description": "Magical worlds with supernatural elements and epic journeys"
+    },
+    "action": {
+      "name": "Action",
+      "description": "Thrilling stories with conflict, investigation and tension"
+    },
+    "horreur": {
+      "name": "Horror",
+      "description": "Mysterious stories with oppressive atmosphere and psychological twists"
+    }
+  }
+}

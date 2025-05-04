@@ -1,0 +1,49 @@
+{
+  "Navigation": {
+    "home": "Accueil",
+    "about": "À Propos",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "contact": "Contact",
+    "login": "Connexion",
+    "signup": "Inscription",
+    "language": "Langue",
+    "skipToContent": "Passer au contenu",
+    "lightMode": "Mode Clair",
+    "darkMode": "Mode Sombre"
+  },
+  "Hero": {
+    "tagline": "Création de Manga Alimentée par l'IA",
+    "title": "De l'idée au manga en quelques secondes.",
+    "subtitle": "SketchDojo transforme vos descriptions en art manga professionnel avec l'IA—aucune compétence en dessin requise",
+    "inputPlaceholder": "Décrivez votre idée de manga...",
+    "selectGenre": "Sélectionnez un genre",
+    "selectGenreButton": "Sélectionner un Genre",
+    "attach": "Joindre",
+    "enhance": "Améliorer",
+    "promptTips": "Conseils",
+    "promptTipsContent": "Soyez précis sur le style de manga, les personnages, le cadre et l'ambiance pour de meilleurs résultats. Essayez d'inclure des détails sur l'éclairage, les émotions et l'action.",
+    "creating": "Création en cours...",
+    "createManga": "Créer un Manga",
+    "createGenreManga": "Créer un Manga {genre}",
+    "tryExamples": "Essayez ces exemples"
+  },
+  "Genres": {
+    "romance": {
+      "name": "Romance",
+      "description": "Histoires centrées sur les relations et les connexions émotionnelles"
+    },
+    "fantasy": {
+      "name": "Fantasy",
+      "description": "Mondes magiques avec des éléments surnaturels et des voyages épiques"
+    },
+    "action": {
+      "name": "Action",
+      "description": "Histoires palpitantes avec des conflits, des enquêtes et de la tension"
+    },
+    "horreur": {
+      "name": "Horreur",
+      "description": "Histoires mystérieuses avec une atmosphère oppressante et des rebondissements psychologiques"
+    }
+  }
+}
