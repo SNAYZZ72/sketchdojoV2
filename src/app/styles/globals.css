@@ -16,16 +16,15 @@
 /* Dark mode styles when using system preference */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: var(--sketchdojo-bg);
-    --foreground: var(--sketchdojo-text);
+    --background: 224 26% 11%;
+    --foreground: 0 0% 98%;
   }
 }
 
 /* Dark mode styles when explicitly toggled */
 .dark {
-  --background: var(--sketchdojo-bg);
-  --foreground: var(--sketchdojo-text);
-
+  --background: 224 26% 11%;  
+  --foreground: 0 0% 98%;
 }
 
 body {
