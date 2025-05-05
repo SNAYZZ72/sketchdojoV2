@@ -2,6 +2,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import React from "react";
+import { AuthProvider } from '@/providers/auth-provider'
 
 // This helps with dynamic params handling
 export const dynamicParams = true;
@@ -31,7 +32,7 @@ export default async function LocaleLayout({
 
     return (
         <NextIntlClientProvider locale={locale} messages={messages}>
-            {children}
+            <AuthProvider>{children}</AuthProvider>
         </NextIntlClientProvider>
     );
 }
