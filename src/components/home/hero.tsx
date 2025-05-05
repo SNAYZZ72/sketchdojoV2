@@ -11,11 +11,13 @@ import {
 import TextareaAutosize from 'react-textarea-autosize';
 import { useRouter } from "next/navigation";
 import { promptCategories } from "@/components/constants/prompt-categories";
-import { backendGenres } from "@/components/constants/backend-genres";
+import { useBackendGenres } from "@/components/constants/backend-genres";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useTranslations } from 'next-intl';
 
 export const Hero = () => {
+  const t = useTranslations('Hero');
   const [promptValue, setPromptValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
@@ -28,6 +30,7 @@ export const Hero = () => {
   const genreDropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const isMobile = useIsMobile();
+  const backendGenres = useBackendGenres();
   
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -124,17 +127,17 @@ export const Hero = () => {
           <div className="relative">
             <span className="absolute inset-0 blur-xl bg-sketchdojo-primary/20 rounded-full transform scale-150"></span>
             <span className="relative inline-block px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-full bg-gray-100/70 dark:bg-white/10 backdrop-blur-sm border border-gray-300/50 dark:border-white/20 text-gray-800 dark:text-white/90">
-              ✨ AI-Powered Manga Creation
+              ✨ {t('tagline')}
             </span>
           </div>
         </div>
         
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-sketchdojo-primary via-gray-700 dark:via-white to-sketchdojo-accent">
-          Idea to manga in seconds.
+          {t('title')}
         </h1>
         
         <h2 className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-white/80 mb-10 sm:mb-16 max-w-xl sm:max-w-2xl mx-auto leading-relaxed px-2">
-          SketchDojo transforms your descriptions into professional manga art with AI—no drawing skills required
+          {t('subtitle')}
         </h2>
         
         {/* Prompt Input */}
@@ -148,7 +151,7 @@ export const Hero = () => {
                 <TextareaAutosize
                   ref={inputRef}
                   id="main-prompt-input"
-                  placeholder="Describe your manga idea..."
+                  placeholder={t('inputPlaceholder')}
                   value={promptValue}
                   onChange={(e) => {
                     setPromptValue(e.target.value);
@@ -178,7 +181,7 @@ export const Hero = () => {
               <div className="px-3 sm:px-5 py-3 border-t border-gray-200 dark:border-white/10">
                 <div className="flex items-center mb-2">
                   <BookOpen className="h-4 w-4 mr-2 text-gray-500 dark:text-white/60" />
-                  <span className="text-sm text-gray-600 dark:text-white/70 font-medium">Select a genre:</span>
+                  <span className="text-sm text-gray-600 dark:text-white/70 font-medium">{t('selectGenre')}:</span>
                 </div>
                 
                 {/* Mobile Genre Dropdown */}
@@ -195,12 +198,12 @@ export const Hero = () => {
                         {selectedGenre ? (
                           <>
                             {React.createElement(getSelectedGenreInfo()?.icon || BookOpen, { className: "h-4 w-4 mr-2" })}
-                            <span>{getSelectedGenreInfo()?.name || "Select Genre"}</span>
+                            <span>{getSelectedGenreInfo()?.name || t('selectGenreButton')}</span>
                           </>
                         ) : (
                           <>
                             <BookOpen className="h-4 w-4 mr-2" />
-                            <span>Select Genre</span>
+                            <span>{t('selectGenreButton')}</span>
                           </>
                         )}
                       </div>
@@ -313,7 +316,7 @@ export const Hero = () => {
                     className="flex items-center gap-1.5 text-gray-500 dark:text-white/60 hover:text-gray-700 dark:hover:text-white/90 transition-colors"
                   >
                     <Paperclip className="h-3.5 w-3.5" />
-                    <span>Attach</span>
+                    <span>{t('attach')}</span>
                   </button>
                   <button
                     type="button"
@@ -332,7 +335,7 @@ export const Hero = () => {
                     ) : (
                       <Wand2 className="h-3.5 w-3.5" />
                     )}
-                    <span>Enhance</span>
+                    <span>{t('enhance')}</span>
                   </button>
                 </div>
                 
@@ -342,11 +345,11 @@ export const Hero = () => {
                       <TooltipTrigger asChild>
                         <div className="flex items-center cursor-help">
                           <Info className="h-3 w-3 mr-1" />
-                          <span className="hidden sm:inline">Prompt tips</span>
+                          <span className="hidden sm:inline">{t('promptTips')}</span>
                         </div>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="bg-white dark:bg-black/90 border-gray-200 dark:border-sketchdojo-primary/50 text-gray-700 dark:text-white max-w-xs p-3">
-                        <p className="text-xs">Be specific about your manga style, characters, setting, and mood for better results. Try including details about lighting, emotions, and action.</p>
+                        <p className="text-xs">{t('promptTipsContent')}</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
@@ -362,12 +365,16 @@ export const Hero = () => {
                     {isLoading ? (
                       <div className="flex items-center">
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        <span>Creating...</span>
+                        <span>{t('creating')}</span>
                       </div>
                     ) : (
                       <div className="flex items-center">
                         <Send className="mr-2 h-4 w-4" />
-                        <span>{selectedGenre ? `Create ${getSelectedGenreInfo()?.name} Manga` : 'Create Manga'}</span>
+                        <span>
+                          {selectedGenre
+                            ? t('createGenreManga', { genre: getSelectedGenreInfo()?.name || '' })
+                            : t('createManga')}
+                        </span>
                       </div>
                     )}
                   </button>
@@ -378,7 +385,7 @@ export const Hero = () => {
           
           {/* Example prompts section */}
           <div className="mt-8 sm:mt-10 flex flex-col items-center space-y-4 sm:space-y-6">
-            <h3 className="text-gray-700 dark:text-white/90 font-medium text-sm sm:text-base">Try these examples:</h3>
+            <h3 className="text-gray-700 dark:text-white/90 font-medium text-sm sm:text-base">{t('tryExamples')}:</h3>
             
             {promptCategories.map((category, index) => (
               <div key={index} className="w-full">

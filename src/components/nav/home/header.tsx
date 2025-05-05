@@ -1,13 +1,15 @@
 "use client";
 
-import Link from "next/link";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
 import { Search, X, Moon, Sun, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { useTheme } from "next-themes";
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/navigation';
+import LanguageSwitcher from '@/components/nav/language-switcher';
 
 
 // User dropdown menu component with light/dark mode support
@@ -15,6 +17,7 @@ const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { signOut, user } = useAuth();
+  const t = useTranslations('Navigation');
 
   // Close the dropdown when clicking outside
   useEffect(() => {
@@ -104,6 +107,7 @@ const UserDropdown = () => {
 };
 
 export function Header() {
+  const t = useTranslations('Navigation');
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -112,6 +116,7 @@ export function Header() {
   useEffect(() => setMounted(true), []);
   const { user, isLoading, signOut } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   
   // Throttled scroll handler for better performance
   const handleScroll = useCallback(() => {
@@ -225,6 +230,11 @@ export function Header() {
 
           {/* Right side actions */}
           <div className="flex items-center space-x-2 md:space-x-4">
+            {/* Language Switcher */}
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
+            
             {/* Search button */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -238,7 +248,7 @@ export function Header() {
             <button
               onClick={toggleDarkMode}
               className="hidden sm:flex p-2 text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-full hover:bg-gray-100 dark:hover:bg-white/5"
-              aria-label={mounted && (theme === 'system' ? systemTheme : theme) === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
+              aria-label={mounted && (theme === 'system' ? systemTheme : theme) === 'dark' ? t('lightMode') : t('darkMode')}
             >
               {mounted && (theme === 'system' ? systemTheme : theme) === 'dark' ? (
                 <Sun className="w-5 h-5" />
@@ -261,14 +271,14 @@ export function Header() {
                   href="/studio/sign-in" 
                   className="relative overflow-hidden py-2 px-3 text-gray-700 dark:text-white/90 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 group text-sm"
                 >
-                  <span className="relative z-10">Login</span>
+                  <span className="relative z-10">{t('login')}</span>
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
                 </Link>
                 <Link 
                   href="/studio/sign-up" 
                   className="py-2 px-4 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent text-white rounded-full font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-sketchdojo-primary/30 transform hover:-translate-y-0.5 hover:brightness-110"
                 >
-                  Sign Up
+                  {t('signup')}
                 </Link>
               </div>
             )}
@@ -351,6 +361,11 @@ export function Header() {
                 {/* Navigation items would go here */}
               </nav>
               
+              {/* Mobile Language Switcher */}
+              <div className="mb-6">
+                <LanguageSwitcher />
+              </div>
+              
               {/* Mobile Auth Links - conditionally rendered */}
               <div className="flex flex-col items-center space-y-6 w-full">
                 {isLoading ? (
@@ -391,14 +406,14 @@ export function Header() {
                       className="text-xl text-gray-700 dark:text-white/90 hover:text-sketchdojo-primary transition-colors duration-300 w-full text-center py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Login
+                      {t('login')}
                     </Link>
                     <Link
                       href="/studio/sign-up"
                       className="py-3 px-8 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent text-white rounded-full font-medium text-lg transition-all duration-300 hover:shadow-lg hover:shadow-sketchdojo-primary/30 w-full max-w-xs text-center"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Sign Up Free
+                      {t('signup')}
                     </Link>
                   </>
                 )}
@@ -412,12 +427,12 @@ export function Header() {
                 {mounted && (theme === 'system' ? systemTheme : theme) === 'dark' ? (
                   <>
                     <Sun className="w-5 h-5" />
-                    <span>Light Mode</span>
+                    <span>{t('lightMode')}</span>
                   </>
                 ) : (
                   <>
                     <Moon className="w-5 h-5" />
-                    <span>Dark Mode</span>
+                    <span>{t('darkMode')}</span>
                   </>
                 )}
               </button>

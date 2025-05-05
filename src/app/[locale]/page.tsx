@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { Header } from "@/components/nav/home/header";
 import { Hero } from "@/components/home/hero";
+import { useTranslations } from 'next-intl';
 
 // Custom cursor effect for enhanced interactivity
 const CustomCursor = () => {
@@ -54,6 +55,9 @@ const ScrollAnimations = () => {
 };
 
 export default function Home() {
+  // Not many translations directly in this page, but we'll use next-intl for consistency
+  const t = useTranslations('Navigation');
+  
   return (
     <main className="min-h-screen bg-sketchdojo-bg overflow-hidden">
       {/* Add custom styles */}
