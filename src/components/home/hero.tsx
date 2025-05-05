@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Loader2, Sparkles, Send, Info, BookOpen, Wand2, Paperclip, X, ChevronDown } from "lucide-react";
-import { 
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -15,7 +15,7 @@ import { useBackendGenres } from "@/components/constants/backend-genres";
 import Image from "next/image";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+// import { Link } from '@/i18n/navigation';
 
 
 export const Hero = () => {
@@ -33,7 +33,7 @@ export const Hero = () => {
   const router = useRouter();
   const isMobile = useIsMobile();
   const backendGenres = useBackendGenres();
-  
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -41,33 +41,33 @@ export const Hero = () => {
         setIsGenreDropdownOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-  
+
   // Create a new project with the current prompt
   const handlePromptSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!promptValue.trim()) return;
-    
+
     setIsLoading(true);
-    
+
     // Generate a unique ID for the new project
     const projectId = Math.random().toString(36).substring(2, 10);
-    
+
     // Construct the URL with query parameters
     let redirectUrl = `/studio/projects/${projectId}?prompt=${encodeURIComponent(promptValue)}`;
-    
+
     // Add genre if selected
     if (selectedGenre) {
       redirectUrl += `&genre=${encodeURIComponent(selectedGenre)}`;
     }
-    
+
     // Redirect to the new project page
     router.push(redirectUrl);
   };
-  
+
   // Select an example prompt
   const selectExample = (prompt: string) => {
     setPromptValue(prompt);
@@ -76,12 +76,12 @@ export const Hero = () => {
       inputRef.current.focus();
     }
   };
-  
+
   // Get the selected genre object
   const getSelectedGenreInfo = () => {
     return backendGenres.find(genre => genre.id === selectedGenre);
   };
-  
+
   const clearPrompt = () => {
     setPromptValue("");
     if (inputRef.current) inputRef.current.focus();
@@ -111,7 +111,7 @@ export const Hero = () => {
       setIsEnhancing(false);
     }
   };
-  
+
   return (
     <section className="relative flex flex-col items-center justify-center min-h-screen px-4 py-16 sm:py-24 overflow-hidden">
       {/* Background gradient */}
@@ -119,7 +119,7 @@ export const Hero = () => {
         {/* Accent line at top */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-sketchdojo-primary/80 via-sketchdojo-accent/80 to-sketchdojo-primary/80 bg-size-200 animate-gradient"></div>
       </div>
-      
+
       {/* Hero content */}
       <div className="container mx-auto text-center z-10 relative">
         <div className="inline-block mb-6 sm:mb-8">
@@ -130,22 +130,22 @@ export const Hero = () => {
             </span>
           </div>
         </div>
-        
+
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 sm:mb-6 bg-clip-text text-transparent bg-linear-to-r from-sketchdojo-primary via-gray-700 dark:via-white to-sketchdojo-accent">
           {t('Hero.title')}
         </h1>
-        
+
         <h2 className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-white/80 mb-10 sm:mb-16 max-w-xl sm:max-w-2xl mx-auto leading-relaxed px-2">
           {t('Hero.subtitle')}
         </h2>
-        
+
         {/* Prompt Input */}
         <div className="w-full max-w-3xl mx-auto px-4 sm:px-0">
           <form onSubmit={handlePromptSubmit} className="relative">
             <div className="relative prompt-input rounded-2xl shadow-lg shadow-sketchdojo-primary/10 transition-all duration-300 focus-within:shadow-sketchdojo-primary/30 border-2 border-gray-300/20 dark:border-sketchdojo-primary/20 focus-within:border-sketchdojo-primary/30 bg-white/80 dark:bg-black/30 backdrop-blur-md">
               <div className="flex items-start">
                 <Sparkles className="absolute left-3 sm:left-5 top-4 text-sketchdojo-primary/60 h-5 w-5" />
-                
+
                 {/* Auto-expanding textarea */}
                 <TextareaAutosize
                   ref={inputRef}
@@ -175,14 +175,14 @@ export const Hero = () => {
                   </button>
                 )}
               </div>
-              
+
               {/* Genre Selection - Mobile dropdown and desktop buttons with tooltips */}
               <div className="px-3 sm:px-5 py-3 border-t border-gray-200 dark:border-white/10">
                 <div className="flex items-center mb-2">
                   <BookOpen className="h-4 w-4 mr-2 text-gray-500 dark:text-white/60" />
                   <span className="text-sm text-gray-600 dark:text-white/70 font-medium">{t('Hero.selectGenre')}:</span>
                 </div>
-                
+
                 {/* Mobile Genre Dropdown */}
                 {isMobile && (
                   <div className="relative" ref={genreDropdownRef}>
@@ -208,7 +208,7 @@ export const Hero = () => {
                       </div>
                       <ChevronDown className={`h-4 w-4 transition-transform ${isGenreDropdownOpen ? 'rotate-180' : ''}`} />
                     </button>
-                    
+
                     {isGenreDropdownOpen && (
                       <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-white/10 py-1 animate-in fade-in-50 slide-in-from-top-5">
                         {backendGenres.map((genre) => {
@@ -235,7 +235,7 @@ export const Hero = () => {
                     )}
                   </div>
                 )}
-                
+
                 {/* Desktop Genre Buttons */}
                 {!isMobile && (
                   <div className="flex flex-wrap gap-2">
@@ -337,7 +337,7 @@ export const Hero = () => {
                     <span>{t('Hero.enhance')}</span>
                   </button>
                 </div>
-                
+
                 <div className="flex items-center justify-between sm:justify-end gap-4">
                   <TooltipProvider>
                     <Tooltip>
@@ -352,10 +352,10 @@ export const Hero = () => {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                  
+
                   {/* Create button */}
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className={`h-9 px-4 rounded-full transition-all duration-300 flex items-center justify-center ${
                       !promptValue?.trim() ? 'bg-sketchdojo-primary/50 cursor-not-allowed' : 'bg-sketchdojo-primary hover:bg-sketchdojo-primary/90'
                     } text-white`}
@@ -377,11 +377,11 @@ export const Hero = () => {
               </div>
             </div>
           </form>
-          
+
           {/* Example prompts section */}
           <div className="mt-8 sm:mt-10 flex flex-col items-center space-y-4 sm:space-y-6">
             <h3 className="text-gray-700 dark:text-white/90 font-medium text-sm sm:text-base">{t('Hero.tryExamples')}:</h3>
-            
+
             {promptCategories.map((category, index) => (
               <div key={index} className="w-full">
                 <h4 className="text-xs sm:text-sm text-gray-600 dark:text-white/70 mb-2 sm:mb-3 text-center">{category.category}</h4>
@@ -402,7 +402,7 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -left-24 w-48 sm:w-64 h-48 sm:h-64 bg-sketchdojo-primary/5 dark:bg-sketchdojo-primary/20 rounded-full blur-3xl opacity-60 animate-pulse-slow"></div>

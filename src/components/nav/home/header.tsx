@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Search, X, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from 'next-intl';
@@ -29,9 +29,7 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  
-  // After mounting, we can safely show the theme toggle
-  useEffect(() => setMounted(true), []);
+
   
   // Throttled scroll handler for better performance
   const handleScroll = useCallback(() => {
@@ -91,6 +89,13 @@ export function Header() {
       }
     }
   };
+
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   // Determine the appropriate background for the header based on scroll
   const headerBackground = scrolled 

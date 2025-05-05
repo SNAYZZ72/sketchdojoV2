@@ -1,14 +1,11 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
-import { Link, getPathname } from "@/i18n/navigation";
-import { useTranslations, useLocale } from "next-intl";
+import { Link} from "@/i18n/navigation";
+import {  useLocale } from "next-intl";
 import { Globe } from "lucide-react";
 
 export const LanguageSwitcher = () => {
-  const t = useTranslations("Navigation");
-  const pathname = usePathname();
   const currentLocale = useLocale();
 
   return (

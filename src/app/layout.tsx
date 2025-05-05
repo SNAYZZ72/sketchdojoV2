@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Poppins, Italianno } from 'next/font/google'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/providers/theme-provider'
 import './styles/globals.css'
 
 const poppins = Poppins({

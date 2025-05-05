@@ -1,21 +1,19 @@
-import {NextIntlClientProvider, hasLocale} from 'next-intl';
-import {notFound} from 'next/navigation';
-import {routing} from '@/i18n/routing';
+import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { notFound } from 'next/navigation';
+import { routing } from '@/i18n/routing';
 import React from "react";
 
 // This helps with dynamic params handling
 export const dynamicParams = true;
 
 export default async function LocaleLayout({
-                                               children,
-                                               params
-                                           }: {
+    children,
+    params
+}: {
     children: React.ReactNode;
-    params: {locale: string};
+    params: Promise<{ locale: string }>;
 }) {
-    // Use Promise.resolve to properly handle params in an async context
-    const resolvedParams = await Promise.resolve(params);
-    const locale = resolvedParams.locale;
+    const { locale } = await params;
 
     // Validate the locale
     if (!locale || !hasLocale(routing.locales, locale)) {
@@ -33,9 +31,8 @@ export default async function LocaleLayout({
 
     return (
         <NextIntlClientProvider locale={locale} messages={messages}>
-            <main className="h-full">
-                {children}
-            </main>
+            {children}
         </NextIntlClientProvider>
     );
 }
+
