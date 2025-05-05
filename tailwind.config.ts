@@ -221,50 +221,42 @@ export default {
 		require("tailwindcss-animate"),
 		// If you want to add backdrop filter support
 		// require('tailwindcss-backdrop-filter'),
-        // Add support for animation delays
-        function({ addUtilities, theme, e }: PluginUtils) {
-            const animationDelayUtilities = Object.entries(theme('animationDelay') as Record<string, string>).map(
-                ([key, value]) => ({
-                    [`.${e(`animation-delay-${key}`)}`]: { animationDelay: value },
-                })
-            );
-            
-            addUtilities(animationDelayUtilities);
-        },
-        // Add support for background size
-        function({ addUtilities, theme, e }: PluginUtils) {
-            const bgSizeUtilities = Object.entries(theme('backgroundSize') as Record<string, string>).map(
-                ([key, value]) => ({
-                    [`.${e(`bg-size-${key}`)}`]: { backgroundSize: value },
-                })
-            );
-            
-            addUtilities(bgSizeUtilities);
-        },
-        plugin(function({ addUtilities, theme }) {
-            const animationDelayUtilities: Record<string, Record<string, string>> = {};
-            const delayValues = theme('animationDelay', {
-                '100': '100ms',
-                '200': '200ms',
-                '300': '300ms',
-                '400': '400ms',
-                '500': '500ms',
-                '600': '600ms',
-                '700': '700ms',
-                '800': '800ms',
-                '900': '900ms',
-                '1000': '1000ms',
-            });
-
-            Object.entries(delayValues as Record<string, string>).forEach(([key, value]) => {
-                animationDelayUtilities[`.${e(`delay-${key}`)}`] = {
-                    'animation-delay': value,
-                };
-            });
-
+        // Add support for animation delays (Tailwind v4)
+        plugin(({ addUtilities, theme }) => {
+            const animationDelays = theme('animationDelay', {});
+            const utilities = Object.entries(animationDelays).reduce((acc: Record<string, any>, [key, value]) => {
+              acc[`.animation-delay-${key}`] = { animationDelay: value };
+              return acc;
+            }, {});
+            addUtilities(utilities);
+        }),
+        // Add support for background size (Tailwind v4)
+        plugin(({ addUtilities, theme }) => {
+            const backgroundSizes = theme('backgroundSize', {});
+            const utilities = Object.entries(backgroundSizes).reduce((acc: Record<string, any>, [key, value]) => {
+                acc[`.bg-size-${key}`] = { backgroundSize: value };
+                return acc;
+            }, {});
+            addUtilities(utilities);
+        }),
+        // Add support for animation delays (Tailwind v4) - Explicit values
+        plugin(({ addUtilities }) => {
+            const animationDelayUtilities = {
+                '.delay-100': { animationDelay: '100ms' },
+                '.delay-200': { animationDelay: '200ms' },
+                '.delay-300': { animationDelay: '300ms' },
+                '.delay-400': { animationDelay: '400ms' },
+                '.delay-500': { animationDelay: '500ms' },
+                '.delay-600': { animationDelay: '600ms' },
+                '.delay-700': { animationDelay: '700ms' },
+                '.delay-800': { animationDelay: '800ms' },
+                '.delay-900': { animationDelay: '900ms' },
+                '.delay-1000': { animationDelay: '1000ms' },
+            };
             addUtilities(animationDelayUtilities);
         }),
-        plugin(function({ addUtilities }) {
+        // Add background utilities (Tailwind v4)
+        plugin(({ addUtilities }) => {
             const backgroundUtilities = {
                 '.bg-size-200': {
                     'background-size': '200% 200%',
@@ -276,12 +268,9 @@ export default {
                     'animation': 'gradient 8s ease infinite',
                 },
             };
-
             addUtilities(backgroundUtilities);
         }),
 	],
 } satisfies Config;
 
-function e(arg0: string) {
-    throw new Error("Function not implemented.");
-}
+// The unused v3 plugin utility type and function were already removed.

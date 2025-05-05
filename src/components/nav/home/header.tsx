@@ -78,14 +78,14 @@ const UserDropdown = () => {
           >
             <div className="py-1">
               <Link
-                href="/studio/profile"
+                href="/profile"
                 className="block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:text-gray-900 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-sketchdojo-primary/20 transition-colors duration-200"
                 onClick={() => setIsOpen(false)}
               >
                 Profile
               </Link>
               <Link
-                href="/studio/settings"
+                href="/settings"
                 className="block px-4 py-2 text-sm text-gray-700 dark:text-white/80 hover:text-gray-900 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-sketchdojo-primary/20 transition-colors duration-200"
                 onClick={() => setIsOpen(false)}
               >
@@ -268,14 +268,14 @@ export function Header() {
               /* Auth Links - Desktop */
               <div className="hidden sm:flex items-center space-x-3">
                 <Link 
-                  href="/studio/sign-in" 
+                  href="/sign-in" 
                   className="relative overflow-hidden py-2 px-3 text-gray-700 dark:text-white/90 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 group text-sm"
                 >
                   <span className="relative z-10">{t('login')}</span>
                   <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
                 </Link>
                 <Link 
-                  href="/studio/sign-up" 
+                  href="/sign-up" 
                   className="py-2 px-4 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent text-white rounded-full font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-sketchdojo-primary/30 transform hover:-translate-y-0.5 hover:brightness-110"
                 >
                   {t('signup')}
@@ -375,14 +375,14 @@ export function Header() {
                 ) : user ? (
                   <>
                     <Link
-                      href="/studio/profile"
+                      href="/profile"
                       className="text-xl text-gray-700 dark:text-white/90 hover:text-sketchdojo-primary transition-colors duration-300 w-full text-center py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       My Profile
                     </Link>
                     <Link
-                      href="/studio/settings"
+                      href="/settings"
                       className="text-xl text-gray-700 dark:text-white/90 hover:text-sketchdojo-primary transition-colors duration-300 w-full text-center py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -402,14 +402,14 @@ export function Header() {
                 ) : (
                   <>
                     <Link
-                      href="/studio/sign-in"
+                      href="/sign-in"
                       className="text-xl text-gray-700 dark:text-white/90 hover:text-sketchdojo-primary transition-colors duration-300 w-full text-center py-2"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {t('login')}
                     </Link>
                     <Link
-                      href="/studio/sign-up"
+                      href="/sign-up"
                       className="py-3 px-8 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent text-white rounded-full font-medium text-lg transition-all duration-300 hover:shadow-lg hover:shadow-sketchdojo-primary/30 w-full max-w-xs text-center"
                       onClick={() => setIsMenuOpen(false)}
                     >
