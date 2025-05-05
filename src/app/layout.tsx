@@ -7,12 +7,14 @@ const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
   variable: '--font-poppins',
+  display: 'swap',
 })
 
 const italianno = Italianno({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-italianno',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

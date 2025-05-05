@@ -1,6 +1,5 @@
-/* src/app/globals.css */
+/* src/app/styles/globals.css */
 @import "tailwindcss";
-
 
 #__next, main {
   height: 100%;
@@ -8,86 +7,156 @@
   -webkit-overflow-scrolling: touch;
 }
 
+@theme {
+  /* Font variables */
+  --font-sans: var(--font-poppins), system-ui, sans-serif;
+  --font-display: var(--font-italianno), cursive;
+  
+  /* SketchDojo.AI specific colors */
+  --color-sketchdojo-primary: #C23FDC;
+  --color-sketchdojo-primary-light: #D76AE8;
+  --color-sketchdojo-primary-dark: #9A32B0;
+  --color-sketchdojo-accent: #5B73FF;
+  --color-sketchdojo-accent-light: #8695FF;
+  --color-sketchdojo-accent-dark: #3B4FD1;
+  --color-sketchdojo-bg: #0F1729;
+  --color-sketchdojo-bg-light: #1A2333;
+  --color-sketchdojo-text: #FFFFFF;
+  --color-sketchdojo-text-muted: rgb(255 255 255 / 0.8);
+  --color-sketchdojo-text-subtle: rgb(255 255 255 / 0.6);
+  
+  /* Generator app colors */
+  --color-primary: #5667FF;
+  --color-primary-light: #7A8AFF;
+  --color-primary-dark: #3A4AE0;
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-secondary: #FF56A9;
+  --color-secondary-light: #FF7AB9;
+  --color-secondary-dark: #E03A8A;
+  --color-secondary-foreground: hsl(0 0% 100%);
+  
+  /* Light mode base colors */
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(270 5% 7%);
+  --card: hsl(0 0% 98%);
+  --card-foreground: hsl(270 5% 7%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(270 5% 7%);
+  --muted: hsl(0 0% 90%);
+  --muted-foreground: hsl(270 5% 35%);
+  --accent: hsl(267 100% 67%);
+  --accent-foreground: hsl(0 0% 100%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(0 0% 85%);
+  --input: hsl(0 0% 85%);
+  --ring: hsl(267 100% 67%);
+  --radius: 0.5rem;
+  
+  /* UI-specific colors */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+  --color-red-900: #7f1d1d;
+  
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #bbf7d0;
+  --color-green-300: #86efac;
+  --color-green-400: #4ade80;
+  --color-green-500: #22c55e;
+  --color-green-600: #16a34a;
+  --color-green-700: #15803d;
+  --color-green-800: #166534;
+  --color-green-900: #14532d;
+  
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+  
+  --color-yellow-50: #fefce8;
+  --color-yellow-100: #fef9c3;
+  --color-yellow-200: #fef08a;
+  --color-yellow-300: #fde047;
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+  --color-yellow-600: #ca8a04;
+  --color-yellow-700: #a16207;
+  --color-yellow-800: #854d0e;
+  --color-yellow-900: #713f12;
+  
+  --color-white: #ffffff;
+  --color-black: #000000;
+  
+  /* Default border colors for Tailwind v4 */
+  --default-border-color: var(--color-gray-200);
+}
+
+@theme dark {
+  /* Dark mode base colors */
+  --background: hsl(270 5% 7%);
+  --foreground: hsl(0 0% 100%);
+  --card: hsl(270 5% 10%);
+  --card-foreground: hsl(0 0% 100%);
+  --popover: hsl(270 5% 7%);
+  --popover-foreground: hsl(0 0% 100%);
+  --muted: hsl(270 5% 20%);
+  --muted-foreground: hsl(0 0% 80%);
+  --accent: hsl(267 100% 67%);
+  --accent-foreground: hsl(0 0% 100%);
+  --destructive: hsl(0 84.2% 60.2%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(270 5% 15%);
+  --input: hsl(270 5% 15%);
+  --ring: hsl(267 100% 67%);
+  
+  /* Default border colors for Tailwind v4 */
+  --default-border-color: var(--border);
+}
+
+/* Fix border colors in Tailwind v4 (they now default to currentColor) */
 @layer base {
-  :root {
-    /* Light mode */
-    --background: 0 0% 100%;
-    --foreground: 270 5% 7%;
-    --card: 0 0% 98%;
-    --card-foreground: 270 5% 7%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 270 5% 7%;
-    --primary: 267 100% 67%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 93%;
-    --secondary-foreground: 270 5% 7%;
-    --muted: 0 0% 90%;
-    --muted-foreground: 270 5% 35%;
-    --accent: 267 100% 67%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
-    --ring: 267 100% 67%;
-    --radius: 0.5rem;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 270 5% 7%;
-    --sidebar-primary: 267 100% 67%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 93%;
-    --sidebar-accent-foreground: 270 5% 7%;
-    --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 267 100% 67%;
-    
-    color-scheme: light;
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--default-border-color, currentColor);
   }
-
-  .dark {
-    --background: 270 5% 7%;
-    --foreground: 0 0% 100%;
-    --card: 270 5% 10%;
-    --card-foreground: 0 0% 100%;
-    --popover: 270 5% 7%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 267 100% 67%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 270 5% 15%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 270 5% 20%;
-    --muted-foreground: 0 0% 80%;
-    --accent: 267 100% 67%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 270 5% 15%;
-    --input: 270 5% 15%;
-    --ring: 267 100% 67%;
-    --sidebar-background: 270 5% 7%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 267 100% 67%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 270 5% 15%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 270 5% 15%;
-    --sidebar-ring: 267 100% 67%;
-    
-    color-scheme: dark;
-  }
-
-  * {
-    border-color: hsl(var(--border));
-  }
-
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
+  
+  /* Add custom font support */
+  .font-italianno {
+    font-family: var(--font-italianno), cursive;
   }
 }
 
 /* Background animation for auth pages */
 .auth-bg {
-  background: linear-gradient(-45deg, #0F1729, #1A2333, #C23FDC20, #5B73FF20);
+  background: linear-gradient(-45deg, var(--color-sketchdojo-bg), var(--color-sketchdojo-bg-light), rgba(194, 63, 220, 0.2), rgba(91, 115, 255, 0.2));
   background-size: 400% 400%;
   animation: gradientBg 15s ease infinite;
 }
@@ -183,42 +252,102 @@
   animation: fadeIn 0.5s ease-out forwards;
 }
 
-/* Card styling */
-.card {
-  background-color: white; /* bg-white */
-  border-color: rgb(229 231 235); /* border-gray-200 */
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm - simplified */
+/* Background size utilities */
+.bg-size-200 { background-size: 200% 200%; }
+.bg-size-100 { background-size: 100% 100%; }
+.animate-gradient { animation: gradient 8s ease infinite; }
+
+/* Keyframes for gradient animations */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.dark .card {
-  background-color: rgba(255, 255, 255, 0.05); /* dark:bg-white/5 */
-  border-color: rgba(255, 255, 255, 0.1); /* dark:border-white/10 */
+/* Card styling */
+.card {
+  background-color: var(--card);
+  border-color: var(--border);
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
 }
 
 .card-header {
-  padding-bottom: 0.75rem; /* pb-3 */
-  border-bottom: 1px solid rgb(229 231 235); /* border-b border-gray-200 */
-}
-
-.dark .card-header {
-  border-bottom-color: rgba(255, 255, 255, 0.1); /* dark:border-white/10 */
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .card-title {
-  font-size: 1.125rem; /* text-lg */
-  line-height: 1.75rem; /* text-lg */
-  font-weight: 500; /* font-medium */
-  color: rgb(17 24 39); /* text-gray-900 */
-}
-
-.dark .card-title {
-  color: white; /* dark:text-white */
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+  color: var(--card-foreground);
 }
 
 .card-description {
-  color: rgb(75 85 99); /* text-gray-600 */
+  color: var(--muted-foreground);
 }
 
-.dark .card-description {
-  color: rgba(255, 255, 255, 0.6); /* dark:text-white/60 */
+/* Custom cursor effect for the landing page */
+.custom-cursor {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(194, 63, 220, 0.2);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  mix-blend-mode: difference;
+  z-index: 9999;
+  transition: width 0.3s, height 0.3s, background 0.3s;
+}
+
+.custom-cursor:active {
+  width: 25px;
+  height: 25px;
+  background: rgba(194, 63, 220, 0.5);
+}
+
+/* Page transition animation */
+@keyframes fadeInPage {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: fadeInPage 0.5s ease-out forwards;
+}
+
+/* Hide elements before they're animated */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.animate-fadeIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays for children */
+.stagger-children > *:nth-child(1) { transition-delay: 0.1s; }
+.stagger-children > *:nth-child(2) { transition-delay: 0.2s; }
+.stagger-children > *:nth-child(3) { transition-delay: 0.3s; }
+.stagger-children > *:nth-child(4) { transition-delay: 0.4s; }
+.stagger-children > *:nth-child(5) { transition-delay: 0.5s; }
+.stagger-children > *:nth-child(6) { transition-delay: 0.6s; }
+
+/* Radial gradient background */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-from) 0%, var(--tw-gradient-to) 100%);
+}
+
+/* Landing page specific styles */
+.prompt-input {
+  box-shadow: 0 0 30px rgba(194, 63, 220, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.prompt-input:focus-within {
+  box-shadow: 0 0 40px rgba(194, 63, 220, 0.4);
 }

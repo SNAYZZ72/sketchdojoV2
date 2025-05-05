@@ -111,9 +111,13 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { theme, setTheme, systemTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
   const { user, isLoading, signOut } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -162,9 +166,14 @@ export function Header() {
   }, [isMenuOpen]);
 
   const toggleDarkMode = () => {
-    if (!mounted) return;
-    const effectiveTheme = theme === 'system' ? systemTheme : theme;
-    setTheme(effectiveTheme === 'dark' ? 'light' : 'dark');
+    // Directly set the theme based on current value
+    if (theme === 'dark') {
+      setTheme('light');
+      console.log('Switched to light mode');
+    } else {
+      setTheme('dark');
+      console.log('Switched to dark mode');
+    }
   };
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -248,12 +257,16 @@ export function Header() {
             <button
               onClick={toggleDarkMode}
               className="hidden sm:flex p-2 text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-full hover:bg-gray-100 dark:hover:bg-white/5"
-              aria-label={mounted && (theme === 'system' ? systemTheme : theme) === 'dark' ? t('lightMode') : t('darkMode')}
+              aria-label={theme === 'dark' ? t('lightMode') : t('darkMode')}
             >
-              {mounted && (theme === 'system' ? systemTheme : theme) === 'dark' ? (
-                <Sun className="w-5 h-5" />
+              {mounted ? (
+                theme === 'dark' ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )
               ) : (
-                <Moon className="w-5 h-5" />
+                <span className="w-5 h-5 block"></span>
               )}
             </button>
 
@@ -424,16 +437,20 @@ export function Header() {
                 onClick={toggleDarkMode}
                 className="flex items-center space-x-2 text-gray-700 dark:text-white/80 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 py-2"
               >
-                {mounted && (theme === 'system' ? systemTheme : theme) === 'dark' ? (
-                  <>
-                    <Sun className="w-5 h-5" />
-                    <span>{t('lightMode')}</span>
-                  </>
+                {mounted ? (
+                  theme === 'dark' ? (
+                    <>
+                      <Sun className="w-5 h-5" />
+                      <span>{t('lightMode')}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Moon className="w-5 h-5" />
+                      <span>{t('darkMode')}</span>
+                    </>
+                  )
                 ) : (
-                  <>
-                    <Moon className="w-5 h-5" />
-                    <span>{t('darkMode')}</span>
-                  </>
+                  <span className="w-5 h-5 block"></span>
                 )}
               </button>
             </div>
