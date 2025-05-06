@@ -73,6 +73,56 @@
   --default-border-color: var(--border);
 }
 
+@layer base {
+  :root {
+    /* Apply light mode variables by default */
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(270 5% 7%);
+    --card: hsl(0 0% 98%);
+    --card-foreground: hsl(270 5% 7%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(270 5% 7%);
+    --muted: hsl(0 0% 90%);
+    --muted-foreground: hsl(270 5% 35%);
+    --accent: hsl(267 100% 67%);
+    --accent-foreground: hsl(0 0% 100%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --border: hsl(0 0% 85%);
+    --input: hsl(0 0% 85%);
+    --ring: hsl(267 100% 67%);
+    
+    /* SketchDojo custom colors - light mode */
+    --color-sketchdojo-bg: #FFFFFF;
+    --color-sketchdojo-bg-light: #F5F5F5;
+    --color-sketchdojo-text: #0F1729;
+  }
+
+  .dark {
+    /* Apply dark mode variables when .dark class is present */
+    --background: hsl(270 5% 7%);
+    --foreground: hsl(0 0% 100%);
+    --card: hsl(270 5% 10%);
+    --card-foreground: hsl(0 0% 100%);
+    --popover: hsl(270 5% 7%);
+    --popover-foreground: hsl(0 0% 100%);
+    --muted: hsl(270 5% 20%);
+    --muted-foreground: hsl(0 0% 80%);
+    --accent: hsl(267 100% 67%);
+    --accent-foreground: hsl(0 0% 100%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(0 0% 100%);
+    --border: hsl(270 5% 15%);
+    --input: hsl(270 5% 15%);
+    --ring: hsl(267 100% 67%);
+    
+    /* SketchDojo custom colors - dark mode */
+    --color-sketchdojo-bg: #0F1729;
+    --color-sketchdojo-bg-light: #1A2333;
+    --color-sketchdojo-text: #FFFFFF;
+  }
+}
+
 /* Fix border colors in Tailwind v4 (they now default to currentColor) */
 @layer base {
   *,
