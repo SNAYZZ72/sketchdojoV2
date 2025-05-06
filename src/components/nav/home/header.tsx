@@ -2,13 +2,13 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Search, X, Moon, Sun, ChevronDown } from "lucide-react";
+import { Search, X, Sun, Moon, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/auth-provider";
 import { useTheme } from "next-themes";
 import { useTranslations } from 'next-intl';
-import { Link, usePathname } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import LanguageSwitcher from '@/components/nav/language-switcher';
 
 
@@ -17,7 +17,6 @@ const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const { signOut, user } = useAuth();
-  const t = useTranslations('Navigation');
 
   // Close the dropdown when clicking outside
   useEffect(() => {
@@ -120,7 +119,12 @@ export function Header() {
   
   const { user, isLoading, signOut } = useAuth();
   const router = useRouter();
-  const pathname = usePathname();
+  
+  // Toggle theme function
+  const toggleTheme = () => {
+    if (!mounted) return;
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
   
   // Throttled scroll handler for better performance
   const handleScroll = useCallback(() => {
@@ -164,17 +168,6 @@ export function Header() {
       document.body.style.overflow = '';
     };
   }, [isMenuOpen]);
-
-  const toggleDarkMode = () => {
-    // Directly set the theme based on current value
-    if (theme === 'dark') {
-      setTheme('light');
-      console.log('Switched to light mode');
-    } else {
-      setTheme('dark');
-      console.log('Switched to dark mode');
-    }
-  };
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -244,6 +237,21 @@ export function Header() {
               <LanguageSwitcher />
             </div>
             
+            {/* Theme toggle button */}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-full hover:bg-gray-100 dark:hover:bg-white/5"
+                aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+              </button>
+            )}
+            
             {/* Search button */}
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -251,23 +259,6 @@ export function Header() {
               aria-label={isSearchOpen ? "Close search" : "Open search"}
             >
               <Search className="w-5 h-5" />
-            </button>
-            
-            {/* Theme toggle button */}
-            <button
-              onClick={toggleDarkMode}
-              className="hidden sm:flex p-2 text-gray-600 dark:text-white/80 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 rounded-full hover:bg-gray-100 dark:hover:bg-white/5"
-              aria-label={theme === 'dark' ? t('lightMode') : t('darkMode')}
-            >
-              {mounted ? (
-                theme === 'dark' ? (
-                  <Sun className="w-5 h-5" />
-                ) : (
-                  <Moon className="w-5 h-5" />
-                )
-              ) : (
-                <span className="w-5 h-5 block"></span>
-              )}
             </button>
 
             {/* Conditional rendering based on login status */}
@@ -430,29 +421,31 @@ export function Header() {
                     </Link>
                   </>
                 )}
-              </div>
-              
-              {/* Theme toggle - Mobile */}
-              <button
-                onClick={toggleDarkMode}
-                className="flex items-center space-x-2 text-gray-700 dark:text-white/80 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 py-2"
-              >
-                {mounted ? (
-                  theme === 'dark' ? (
-                    <>
-                      <Sun className="w-5 h-5" />
-                      <span>{t('lightMode')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Moon className="w-5 h-5" />
-                      <span>{t('darkMode')}</span>
-                    </>
-                  )
-                ) : (
-                  <span className="w-5 h-5 block"></span>
+                
+                {/* Mobile Theme Toggle */}
+                {mounted && (
+                  <button
+                    onClick={() => {
+                      toggleTheme();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center justify-center space-x-2 text-xl text-gray-700 dark:text-white/90 hover:text-sketchdojo-primary transition-colors duration-300 w-full text-center py-2"
+                    aria-label={theme === 'dark' ? "Switch to light mode" : "Switch to dark mode"}
+                  >
+                    {theme === 'dark' ? (
+                      <>
+                        <Sun className="w-5 h-5 mr-2" />
+                        <span>Light Mode</span>
+                      </>
+                    ) : (
+                      <>
+                        <Moon className="w-5 h-5 mr-2" />
+                        <span>Dark Mode</span>
+                      </>
+                    )}
+                  </button>
                 )}
-              </button>
+              </div>
             </div>
           </motion.div>
         )}
