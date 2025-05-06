@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from 'next-intl';
+import { Link } from "@/i18n/navigation";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,7 @@ const checkPasswordStrength = (password: string): {strength: number, feedback: s
 };
 
 export default function SignUpPage() {
+  const t = useTranslations('Auth'); // Access translations with the Auth namespace
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -127,7 +129,7 @@ export default function SignUpPage() {
       }
 
       setSignUpComplete(true);
-      toast.success("Check your email for the confirmation link!");
+      toast.success(t('checkEmailConfirmation'));
       
       // Navigate to sign-in page after successful sign up with a delay
       setTimeout(() => {
@@ -135,7 +137,7 @@ export default function SignUpPage() {
       }, 3000);
       
     } catch (error) {
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(t('unexpectedError'));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -159,7 +161,7 @@ export default function SignUpPage() {
         setErrorMessage(error.message);
       }
     } catch (error) {
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(t('unexpectedError'));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -176,7 +178,7 @@ export default function SignUpPage() {
               <div className="relative overflow-hidden mr-3">
                 <Image 
                   src="/logo/logo.svg" 
-                  alt="SketchDojo Logo" 
+                  alt={t('logoAlt')}
                   width={50} 
                   height={50}
                   className="transform transition-transform duration-300 group-hover:scale-110"
@@ -188,9 +190,9 @@ export default function SignUpPage() {
               </span>
             </Link>
           </div>
-          <h2 className="mt-2 text-2xl font-bold text-white">Create your account</h2>
+          <h2 className="mt-2 text-2xl font-bold text-white">{t('createAccount')}</h2>
           <p className="mt-2 text-sm text-white/60">
-            Join thousands of manga creators and start your creative journey
+            {t('joinCreators')}
           </p>
         </div>
 
@@ -206,7 +208,7 @@ export default function SignUpPage() {
               <Alert className="bg-green-500/10 border-green-500/20 text-green-400 mb-4">
                 <CheckCircle2 className="h-4 w-4" />
                 <AlertDescription>
-                  Account created successfully! Check your email to verify your account.
+                  {t('accountCreatedSuccess')}
                 </AlertDescription>
               </Alert>
             )}
@@ -221,10 +223,10 @@ export default function SignUpPage() {
                       name="full_name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white/80">Full Name</FormLabel>
+                          <FormLabel className="text-white/80">{t('fullName')}</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="John Doe" 
+                              placeholder={t('fullNamePlaceholder')} 
                               className="bg-white/10 border-white/20 text-white focus:border-sketchdojo-primary focus:ring-sketchdojo-primary/20"
                               disabled={isLoading}
                               {...field} 
@@ -240,10 +242,10 @@ export default function SignUpPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white/80">Email</FormLabel>
+                          <FormLabel className="text-white/80">{t('email')}</FormLabel>
                           <FormControl>
                             <Input 
-                              placeholder="you@example.com" 
+                              placeholder={t('emailPlaceholder')} 
                               className="bg-white/10 border-white/20 text-white focus:border-sketchdojo-primary focus:ring-sketchdojo-primary/20"
                               disabled={isLoading}
                               {...field} 
@@ -259,7 +261,7 @@ export default function SignUpPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white/80">Password</FormLabel>
+                          <FormLabel className="text-white/80">{t('password')}</FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input 
@@ -283,7 +285,7 @@ export default function SignUpPage() {
                                   <Eye className="h-4 w-4" />
                                 )}
                                 <span className="sr-only">
-                                  {showPassword ? "Hide password" : "Show password"}
+                                  {showPassword ? t('hidePassword') : t('showPassword')}
                                 </span>
                               </Button>
                             </div>
@@ -312,11 +314,15 @@ export default function SignUpPage() {
                                       ? 'text-yellow-400' 
                                       : 'text-green-400'
                                 }`}>
-                                  {passwordStrength.feedback}
+                                  {t(passwordStrength.strength <= 2 
+                                    ? 'weakPassword' 
+                                    : passwordStrength.strength <= 4 
+                                      ? 'moderatePassword' 
+                                      : 'strongPassword')}
                                 </span>
                               </div>
                               <FormDescription className="text-white/40 text-xs mt-1">
-                                Use at least 6 characters, including uppercase, lowercase, numbers, and symbols for a stronger password.
+                                {t('passwordRequirements')}
                               </FormDescription>
                             </div>
                           )}
@@ -331,7 +337,7 @@ export default function SignUpPage() {
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-white/80">Confirm Password</FormLabel>
+                          <FormLabel className="text-white/80">{t('confirmPassword')}</FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Input 
@@ -355,7 +361,7 @@ export default function SignUpPage() {
                                   <Eye className="h-4 w-4" />
                                 )}
                                 <span className="sr-only">
-                                  {showConfirmPassword ? "Hide password" : "Show password"}
+                                  {showConfirmPassword ? t('hidePassword') : t('showPassword')}
                                 </span>
                               </Button>
                             </div>
@@ -380,10 +386,10 @@ export default function SignUpPage() {
                           </FormControl>
                           <div className="space-y-1 leading-none">
                             <FormLabel className="text-sm text-white/80 font-normal">
-                              I agree to the{" "}
-                              <Link href="#terms" className="text-sketchdojo-primary hover:underline">Terms of Service</Link>
-                              {" "}and{" "}
-                              <Link href="#privacy" className="text-sketchdojo-primary hover:underline">Privacy Policy</Link>
+                              {t('agreeToTerms')}{" "}
+                              <Link href="#terms" className="text-sketchdojo-primary hover:underline">{t('termsOfService')}</Link>
+                              {" "}{t('and')}{" "}
+                              <Link href="#privacy" className="text-sketchdojo-primary hover:underline">{t('privacyPolicy')}</Link>
                             </FormLabel>
                             <FormMessage className="text-red-400" />
                           </div>
@@ -399,10 +405,10 @@ export default function SignUpPage() {
                       {isLoading ? (
                         <div className="flex items-center gap-2">
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          <span>Creating account...</span>
+                          <span>{t('creatingAccount')}</span>
                         </div>
                       ) : (
-                        "Create account"
+                        t('createAccountButton')
                       )}
                     </Button>
                   </form>
@@ -415,7 +421,7 @@ export default function SignUpPage() {
                     </div>
                     <div className="relative flex justify-center text-xs">
                       <span className="bg-sketchdojo-bg px-2 text-white/60">
-                        Or sign up with
+                        {t('orSignUpWith')}
                       </span>
                     </div>
                   </div>
@@ -451,16 +457,16 @@ export default function SignUpPage() {
             ) : (
               <div className="py-8 text-center animate-fadeIn">
                 <CheckCircle2 className="h-16 w-16 mx-auto text-green-400 mb-4" />
-                <h3 className="text-white text-xl font-medium mb-2">Account Created Successfully!</h3>
+                <h3 className="text-white text-xl font-medium mb-2">{t('accountCreatedSuccessTitle')}</h3>
                 <p className="text-white/60 mb-6">
-                  We&apos;ve sent a confirmation email to <span className="text-white font-medium">{form.getValues("email")}</span>.<br/>
-                  Please check your inbox and click the verification link.
+                  {t('confirmationEmailSent')} <span className="text-white font-medium">{form.getValues("email")}</span>.<br/>
+                  {t('checkInboxAndClick')}
                 </p>
                 <Button 
                   onClick={() => router.push('/studio/sign-in')}
                   className="bg-white/10 text-white hover:bg-white/20"
                 >
-                  Go to Sign In
+                  {t('goToSignIn')}
                 </Button>
               </div>
             )}
@@ -468,9 +474,9 @@ export default function SignUpPage() {
           <CardFooter className="flex justify-center border-t border-white/10 pt-6">
             {!signUpComplete && (
               <p className="text-sm text-white/60">
-                Already have an account?{" "}
+                {t('alreadyHaveAccount')}{" "}
                 <Link href="/studio/sign-in" className="text-sketchdojo-primary hover:text-sketchdojo-primary-light hover:underline transition-colors">
-                  Sign in
+                  {t('signIn')}
                 </Link>
               </p>
             )}

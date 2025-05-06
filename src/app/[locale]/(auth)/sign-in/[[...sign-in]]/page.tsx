@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from 'next-intl';
+import { Link } from "@/i18n/navigation";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -37,6 +38,7 @@ const formSchema = z.object({
 });
 
 export default function SignInPage() {
+  const t = useTranslations('Auth'); // Access translations with the Auth namespace
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -69,7 +71,7 @@ export default function SignInPage() {
         return;
       }
 
-      toast.success("Sign in successful!");
+      toast.success(t('signInSuccess'));
       
       // Refresh the page to update auth state
       router.refresh();
@@ -78,7 +80,7 @@ export default function SignInPage() {
       router.push('/site');
       
     } catch (error) {
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(t('unexpectedError'));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -90,7 +92,7 @@ export default function SignInPage() {
     const email = form.getValues("email");
     
     if (!email || !z.string().email().safeParse(email).success) {
-      toast.error("Please enter a valid email address.");
+      toast.error(t('validEmailRequired'));
       return;
     }
     
@@ -109,10 +111,10 @@ export default function SignInPage() {
       }
       
       setForgotPasswordSent(true);
-      toast.success("Password reset link sent to your email!");
+      toast.success(t('passwordResetLinkSent'));
       
     } catch (error) {
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(t('unexpectedError'));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -136,7 +138,7 @@ export default function SignInPage() {
         setErrorMessage(error.message);
       }
     } catch (error) {
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(t('unexpectedError'));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -153,7 +155,7 @@ export default function SignInPage() {
               <div className="relative overflow-hidden mr-3">
                 <Image 
                   src="/logo/logo.svg" 
-                  alt="SketchDojo Logo" 
+                  alt={t('logoAlt')}
                   width={50} 
                   height={50}
                   className="transform transition-transform duration-300 group-hover:scale-110"
@@ -165,9 +167,9 @@ export default function SignInPage() {
               </span>
             </Link>
           </div>
-          <h2 className="mt-2 text-2xl font-bold text-white">Welcome back</h2>
+          <h2 className="mt-2 text-2xl font-bold text-white">{t('welcomeBack')}</h2>
           <p className="mt-2 text-sm text-white/60">
-            Sign in to your account to continue creating amazing manga
+            {t('signInSubtitle')}
           </p>
         </div>
 
@@ -182,7 +184,7 @@ export default function SignInPage() {
             {forgotPasswordSent && (
               <Alert className="bg-green-500/10 border-green-500/20 text-green-400 mb-4">
                 <AlertDescription>
-                  Password reset link sent! Check your email inbox.
+                  {t('passwordResetLinkSentMsg')}
                 </AlertDescription>
               </Alert>
             )}
@@ -195,10 +197,10 @@ export default function SignInPage() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-white/80">Email</FormLabel>
+                      <FormLabel className="text-white/80">{t('email')}</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="you@example.com" 
+                          placeholder={t('emailPlaceholder')}
                           className="bg-white/10 border-white/20 text-white focus:border-sketchdojo-primary focus:ring-sketchdojo-primary/20"
                           disabled={isLoading}
                           {...field} 
@@ -215,7 +217,7 @@ export default function SignInPage() {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center justify-between">
-                        <FormLabel className="text-white/80">Password</FormLabel>
+                        <FormLabel className="text-white/80">{t('password')}</FormLabel>
                         <Button
                           type="button"
                           variant="link"
@@ -224,7 +226,7 @@ export default function SignInPage() {
                           onClick={handleForgotPassword}
                           disabled={isLoading}
                         >
-                          Forgot password?
+                          {t('forgotPassword')}
                         </Button>
                       </div>
                       <FormControl>
@@ -250,7 +252,7 @@ export default function SignInPage() {
                               <Eye className="h-4 w-4" />
                             )}
                             <span className="sr-only">
-                              {showPassword ? "Hide password" : "Show password"}
+                              {showPassword ? t('hidePassword') : t('showPassword')}
                             </span>
                           </Button>
                         </div>
@@ -268,10 +270,10 @@ export default function SignInPage() {
                   {isLoading ? (
                     <div className="flex items-center gap-2">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Signing in...</span>
+                      <span>{t('signingIn')}</span>
                     </div>
                   ) : (
-                    "Sign in"
+                    t('signIn')
                   )}
                 </Button>
               </form>
@@ -284,7 +286,7 @@ export default function SignInPage() {
                 </div>
                 <div className="relative flex justify-center text-xs">
                   <span className="bg-sketchdojo-bg px-2 text-white/60">
-                    Or continue with
+                    {t('orContinueWith')}
                   </span>
                 </div>
               </div>
@@ -319,16 +321,16 @@ export default function SignInPage() {
           </CardContent>
           <CardFooter className="flex flex-col items-center space-y-4 border-t border-white/10 pt-6">
             <p className="text-sm text-white/60">
-              Don&apos;t have an account?{" "}
+              {t('dontHaveAccount')}{" "}
               <Link href="/studio/sign-up" className="text-sketchdojo-primary hover:text-sketchdojo-primary-light hover:underline transition-colors">
-                Sign up
+                {t('signUp')}
               </Link>
             </p>
             <p className="text-xs text-white/40">
-              By signing in, you agree to our{" "}
-              <Link href="#terms" className="hover:text-white/60 transition-colors">Terms of Service</Link>
-              {" "}and{" "}
-              <Link href="#privacy" className="hover:text-white/60 transition-colors">Privacy Policy</Link>
+              {t('termsAgree')}{" "}
+              <Link href="#terms" className="hover:text-white/60 transition-colors">{t('termsOfService')}</Link>
+              {" "}{t('and')}{" "}
+              <Link href="#privacy" className="hover:text-white/60 transition-colors">{t('privacyPolicy')}</Link>
             </p>
           </CardFooter>
         </Card>

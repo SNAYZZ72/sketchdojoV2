@@ -58,7 +58,7 @@ export default async function LocaleLayout({
     return (
         <html lang="en" className={`${poppins.variable} ${italianno.variable}`} suppressHydrationWarning>
         <body className={`${poppins.className}`}>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <NextIntlClientProvider locale={locale} messages={messages}>
                 <AuthProvider>{children}</AuthProvider>
             </NextIntlClientProvider>

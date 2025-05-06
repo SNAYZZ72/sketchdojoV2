@@ -6,8 +6,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from 'next-intl';
+import { Link } from "@/i18n/navigation";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,7 @@ const RequestLinkModal = ({
   onSubmit: (email: string) => void;
   isLoading: boolean;
 }) => {
+  const t = useTranslations('Auth');
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
@@ -63,7 +65,7 @@ const RequestLinkModal = ({
     
     // Validate email
     if (!email || !z.string().email().safeParse(email).success) {
-      setError("Please enter a valid email address.");
+      setError(t('validEmailRequired'));
       return;
     }
     
@@ -77,7 +79,7 @@ const RequestLinkModal = ({
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-sketchdojo-bg-light border border-white/10 rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-fadeIn">
         <div className="p-4 flex justify-between items-center border-b border-white/10">
-          <h3 className="text-white text-lg font-medium">Request Password Reset Link</h3>
+          <h3 className="text-white text-lg font-medium">{t('requestPasswordResetLink')}</h3>
           <button 
             onClick={onClose}
             className="text-white/60 hover:text-white transition-colors"
@@ -89,7 +91,7 @@ const RequestLinkModal = ({
         
         <form onSubmit={handleSubmit} className="p-6">
           <p className="text-white/80 mb-4">
-            Please enter your email address to receive a new password reset link:
+            {t('enterEmailForResetLink')}
           </p>
           
           {error && (
@@ -101,14 +103,14 @@ const RequestLinkModal = ({
           
           <div className="mb-6">
             <label htmlFor="email" className="block text-white/80 text-sm font-medium mb-2">
-              Email
+              {t('email')}
             </label>
             <Input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder={t('emailPlaceholder')}
               className="bg-white/10 border-white/20 text-white focus:border-sketchdojo-primary focus:ring-sketchdojo-primary/20"
               disabled={isLoading}
               required
@@ -123,7 +125,7 @@ const RequestLinkModal = ({
               className="bg-transparent text-white border-white/20 hover:bg-white/10"
               disabled={isLoading}
             >
-              Cancel
+              {t('cancel')}
             </Button>
             <Button
               type="submit"
@@ -133,10 +135,10 @@ const RequestLinkModal = ({
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  <span>Sending...</span>
+                  <span>{t('sending')}</span>
                 </div>
               ) : (
-                "Send Reset Link"
+                t('sendResetLink')
               )}
             </Button>
           </div>
@@ -189,6 +191,7 @@ const checkPasswordStrength = (password: string): {strength: number, feedback: s
 };
 
 export default function ResetPasswordPage() {
+  const t = useTranslations('Auth'); // Access translations with the Auth namespace
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -231,15 +234,15 @@ export default function ResetPasswordPage() {
       setResetToken(token);
     } else {
       setTokenMissing(true);
-      setErrorMessage("Password reset token is missing. Please use the link from your email.");
+      setErrorMessage(t('resetTokenMissing'));
     }
-  }, [searchParams]);
+  }, [searchParams, t]);
 
   // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       if (!resetToken) {
-        setErrorMessage("Reset token is missing. Please use the link from your email.");
+        setErrorMessage(t('resetTokenMissing'));
         return;
       }
 
@@ -257,7 +260,7 @@ export default function ResetPasswordPage() {
       }
 
       setResetComplete(true);
-      toast.success("Password reset successful!");
+      toast.success(t('passwordResetSuccess'));
       
       // Navigate to sign-in page after successful reset with a delay
       setTimeout(() => {
@@ -265,7 +268,7 @@ export default function ResetPasswordPage() {
       }, 3000);
       
     } catch (error) {
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(t('unexpectedError'));
       console.error(error);
     } finally {
       setIsLoading(false);
@@ -288,11 +291,11 @@ export default function ResetPasswordPage() {
           return;
         }
         
-        toast.success("A new password reset link has been sent to your email!");
+        toast.success(t('passwordResetLinkSent'));
         setIsModalOpen(false);
         
       } catch (error) {
-        setErrorMessage("An unexpected error occurred. Please try again.");
+        setErrorMessage(t('unexpectedError'));
         console.error(error);
       } finally {
         setIsLoading(false);
@@ -324,7 +327,7 @@ export default function ResetPasswordPage() {
               <div className="relative overflow-hidden mr-3">
                 <Image 
                   src="/logo/logo.svg" 
-                  alt="SketchDojo Logo" 
+                  alt={t('logoAlt')}
                   width={50} 
                   height={50}
                   className="transform transition-transform duration-300 group-hover:scale-110"
@@ -336,9 +339,9 @@ export default function ResetPasswordPage() {
               </span>
             </Link>
           </div>
-          <h2 className="mt-2 text-2xl font-bold text-white">Reset your password</h2>
+          <h2 className="mt-2 text-2xl font-bold text-white">{t('resetYourPassword')}</h2>
           <p className="mt-2 text-sm text-white/60">
-            Create a new secure password for your account
+            {t('createNewPassword')}
           </p>
         </div>
 
@@ -354,7 +357,7 @@ export default function ResetPasswordPage() {
               <Alert className="bg-green-500/10 border-green-500/20 text-green-400 mb-4">
                 <CheckCircle2 className="h-4 w-4" />
                 <AlertDescription>
-                  Password reset successfully! You&apos;ll be redirected to sign in.
+                  {t('passwordResetSuccessMsg')}
                 </AlertDescription>
               </Alert>
             )}
@@ -365,9 +368,9 @@ export default function ResetPasswordPage() {
                 {tokenMissing ? (
                   <div className="py-8 text-center">
                     <LockKeyhole className="h-16 w-16 mx-auto text-sketchdojo-primary mb-4" />
-                    <h3 className="text-white text-xl font-medium mb-2">Missing Reset Token</h3>
+                    <h3 className="text-white text-xl font-medium mb-2">{t('missingResetToken')}</h3>
                     <p className="text-white/60 mb-6">
-                      The password reset link appears to be invalid or expired. Please request a new reset link.
+                      {t('invalidOrExpiredLink')}
                     </p>
                     <Button 
                       onClick={() => setIsModalOpen(true)}
@@ -377,10 +380,10 @@ export default function ResetPasswordPage() {
                       {isLoading ? (
                         <div className="flex items-center gap-2">
                           <Loader2 className="h-4 w-4 animate-spin" />
-                          <span>Processing...</span>
+                          <span>{t('processing')}</span>
                         </div>
                       ) : (
-                        "Request New Link"
+                        t('requestNewLink')
                       )}
                     </Button>
                   </div>
@@ -392,7 +395,7 @@ export default function ResetPasswordPage() {
                         name="password"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">New Password</FormLabel>
+                            <FormLabel className="text-white/80">{t('newPassword')}</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <Input 
@@ -416,7 +419,7 @@ export default function ResetPasswordPage() {
                                     <Eye className="h-4 w-4" />
                                   )}
                                   <span className="sr-only">
-                                    {showPassword ? "Hide password" : "Show password"}
+                                    {showPassword ? t('hidePassword') : t('showPassword')}
                                   </span>
                                 </Button>
                               </div>
@@ -445,11 +448,15 @@ export default function ResetPasswordPage() {
                                         ? 'text-yellow-400' 
                                         : 'text-green-400'
                                   }`}>
-                                    {passwordStrength.feedback}
+                                    {t(passwordStrength.strength <= 2 
+                                      ? 'weakPassword' 
+                                      : passwordStrength.strength <= 4 
+                                        ? 'moderatePassword' 
+                                        : 'strongPassword')}
                                   </span>
                                 </div>
                                 <FormDescription className="text-white/40 text-xs mt-1">
-                                  Use at least 6 characters, including uppercase, lowercase, numbers, and symbols for a stronger password.
+                                  {t('passwordRequirements')}
                                 </FormDescription>
                               </div>
                             )}
@@ -464,7 +471,7 @@ export default function ResetPasswordPage() {
                         name="confirmPassword"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-white/80">Confirm New Password</FormLabel>
+                            <FormLabel className="text-white/80">{t('confirmNewPassword')}</FormLabel>
                             <FormControl>
                               <div className="relative">
                                 <Input 
@@ -488,7 +495,7 @@ export default function ResetPasswordPage() {
                                     <Eye className="h-4 w-4" />
                                   )}
                                   <span className="sr-only">
-                                    {showConfirmPassword ? "Hide password" : "Show password"}
+                                    {showConfirmPassword ? t('hidePassword') : t('showPassword')}
                                   </span>
                                 </Button>
                               </div>
@@ -506,10 +513,10 @@ export default function ResetPasswordPage() {
                         {isLoading ? (
                           <div className="flex items-center gap-2">
                             <Loader2 className="h-4 w-4 animate-spin" />
-                            <span>Resetting password...</span>
+                            <span>{t('resettingPassword')}</span>
                           </div>
                         ) : (
-                          "Reset Password"
+                          t('resetPassword')
                         )}
                       </Button>
                     </form>
@@ -519,16 +526,16 @@ export default function ResetPasswordPage() {
             ) : (
               <div className="py-8 text-center animate-fadeIn">
                 <CheckCircle2 className="h-16 w-16 mx-auto text-green-400 mb-4" />
-                <h3 className="text-white text-xl font-medium mb-2">Password Reset Complete!</h3>
+                <h3 className="text-white text-xl font-medium mb-2">{t('passwordResetComplete')}</h3>
                 <p className="text-white/60 mb-6">
-                  Your password has been successfully reset.<br/>
-                  You can now sign in with your new password.
+                  {t('passwordResetSuccessful')}<br/>
+                  {t('signInWithNewPassword')}
                 </p>
                 <Button 
                   onClick={() => router.push('/studio/sign-in')}
                   className="bg-white/10 text-white hover:bg-white/20"
                 >
-                  Go to Sign In
+                  {t('goToSignIn')}
                 </Button>
               </div>
             )}
@@ -536,9 +543,9 @@ export default function ResetPasswordPage() {
           <CardFooter className="flex justify-center border-t border-white/10 pt-6">
             {!resetComplete && (
               <p className="text-sm text-white/60">
-                Remember your password?{" "}
+                {t('rememberPassword')}{" "}
                 <Link href="/studio/sign-in" className="text-sketchdojo-primary hover:text-sketchdojo-primary-light hover:underline transition-colors">
-                  Sign in
+                  {t('signIn')}
                 </Link>
               </p>
             )}
