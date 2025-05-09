@@ -2,10 +2,10 @@ import React from "react";
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { AuthProvider } from '@/providers/auth-provider'
+import { AuthProvider } from '@/lib/providers/auth-provider'
 import type { Metadata } from 'next'
 import { Poppins, Italianno } from 'next/font/google'
-import { ThemeProvider } from '@/providers/theme-provider'
+import { ThemeProvider } from '@/lib/providers/theme-provider'
 import '../styles/globals.css'
 
 const poppins = Poppins({

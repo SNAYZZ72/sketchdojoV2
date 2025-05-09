@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { Header } from "@/components/nav/home/header";
-import { Hero } from "@/components/home/hero";
+import { Header } from "@/components/landing-page/home/header";
+import { Hero } from "@/components/landing-page/home/hero";
 
 const CustomCursor = () => {
   useEffect(() => {
