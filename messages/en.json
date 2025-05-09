@@ -3,7 +3,10 @@
     "home": "Home",
     "about": "About",
     "features": "Features",
+    "howToUse": "How It Works",
+    "showcase": "Showcase",
     "pricing": "Pricing",
+    "faq": "FAQ",
     "contact": "Contact",
     "login": "Log In",
     "signup": "Sign Up",
@@ -11,22 +14,6 @@
     "skipToContent": "Skip to content",
     "lightMode": "Light Mode",
     "darkMode": "Dark Mode"
-  },
-  "Hero": {
-    "tagline": "AI-Powered Manga Creation",
-    "title": "Idea to manga in seconds.",
-    "subtitle": "SketchDojo transforms your descriptions into professional manga art with AI—no drawing skills required",
-    "inputPlaceholder": "Describe your manga idea...",
-    "selectGenre": "Select a genre",
-    "selectGenreButton": "Select Genre",
-    "attach": "Attach",
-    "enhance": "Enhance",
-    "promptTips": "Prompt tips",
-    "promptTipsContent": "Be specific about your manga style, characters, setting, and mood for better results. Try including details about lighting, emotions, and action.",
-    "creating": "Creating...",
-    "createManga": "Create Manga",
-    "createGenreManga": "Create {genre} Manga",
-    "tryExamples": "Try these examples"
   },
   "Auth": {
     "welcomeBack": "Welcome back",
@@ -97,22 +84,173 @@
     "sending": "Sending...",
     "sendResetLink": "Send Reset Link"
   },
-  "Genres": {
-    "romance": {
-      "name": "Romance",
-      "description": "Stories focused on relationships and emotional connections"
+  "Hero": {
+    "tagline": "AI-Powered Manga Creation",
+    "title": "Idea to manga in seconds.",
+    "subtitle": "SketchDojo transforms your descriptions into professional manga art with AI—no drawing skills required",
+    "inputPlaceholder": "Describe your manga idea...",
+    "selectGenre": "Select a genre",
+    "selectGenreButton": "Select Genre",
+    "attach": "Attach",
+    "enhance": "Enhance",
+    "promptTips": "Prompt tips",
+    "promptTipsContent": "Be specific about your manga style, characters, setting, and mood for better results. Try including details about lighting, emotions, and action.",
+    "creating": "Creating...",
+    "createManga": "Create Manga",
+    "createGenreManga": "Create {genre} Manga",
+    "tryExamples": "Try these examples",
+    "tryForFree": "Try for free",
+    "signup": "Sign Up"
+  },
+  "Features": {
+    "title": "Everything You Need to Create Amazing Manga",
+    "subtitle": "SketchDojo combines powerful AI technology with intuitive tools to help you create professional-quality manga without any drawing skills.",
+    "aiPowered": {
+      "title": "AI-Powered Creation",
+      "description": "Transform your text descriptions into stunning manga art in seconds with our advanced AI technology"
     },
-    "fantasy": {
-      "name": "Fantasy",
-      "description": "Magical worlds with supernatural elements and epic journeys"
+    "professionalQuality": {
+      "title": "Professional Quality",
+      "description": "Generate high-quality manga panels with authentic art styles, no artistic skills required"
     },
-    "action": {
-      "name": "Action",
-      "description": "Thrilling stories with conflict, investigation and tension"
+    "completeCustomization": {
+      "title": "Complete Customization",
+      "description": "Customize every aspect of your manga from characters and scenes to panel layouts and speech bubbles"
     },
-    "horreur": {
-      "name": "Horror",
-      "description": "Mysterious stories with oppressive atmosphere and psychological twists"
+    "multipleStyles": {
+      "title": "Multiple Styles",
+      "description": "Choose from various manga styles including classic black & white, modern color, or your own custom style"
+    },
+    "interactiveCreation": {
+      "title": "Interactive Creation",
+      "description": "Chat with our AI to refine your manga through a natural conversation interface"
+    },
+    "characterLibrary": {
+      "title": "Character Library",
+      "description": "Build a library of your characters for easy reuse across different manga projects"
+    },
+    "oneClickEnhancement": {
+      "title": "One-Click Enhancement",
+      "description": "Enhance and improve your manga panels with a single click using AI-powered suggestions"
+    },
+    "easySharing": {
+      "title": "Easy Sharing",
+      "description": "Export your manga in various formats and share directly to social media or with friends"
     }
+  },
+  "HowItWorks": {
+    "title": "How SketchDojo Works",
+    "subtitle": "Creating stunning manga is incredibly easy with SketchDojo. Follow these simple steps to bring your ideas to life.",
+    "step1": {
+      "title": "Describe Your Idea",
+      "description": "Simply describe what you want in your manga using natural language. Include details about characters, scenes, and styles."
+    },
+    "step2": {
+      "title": "AI Generates Panels",
+      "description": "Our advanced AI instantly creates high-quality manga panels based on your description, complete with authentic manga styles."
+    },
+    "step3": {
+      "title": "Customize & Edit",
+      "description": "Refine your manga by editing panels, adjusting layouts, and fine-tuning details until it's exactly how you want it."
+    },
+    "step4": {
+      "title": "Share Your Creation",
+      "description": "Export your manga in various formats and share your creation with friends, on social media, or with the SketchDojo community."
+    }
+  },
+  "Showcase": {
+    "title": "Featured Creations",
+    "subtitle": "Check out these amazing manga panels created by our users with just a few text prompts.",
+    "viewAll": "View All Creations",
+    "viewFull": "View Full Manga",
+    "tryPrompt": "Try This Prompt",
+    "communityCreations": "Community Creations"
+  },
+  "Pricing": {
+    "title": "Choose Your Plan",
+    "subtitle": "Whether you're just starting out or creating professionally, we have a plan that's perfect for you.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save 20%",
+    "free": {
+      "name": "Free",
+      "description": "Perfect for beginners to try out SketchDojo",
+      "buttonText": "Start Creating"
+    },
+    "pro": {
+      "name": "Pro",
+      "description": "For manga enthusiasts who create regularly",
+      "buttonText": "Get Pro"
+    },
+    "ultimate": {
+      "name": "Ultimate",
+      "description": "For serious creators and professionals",
+      "buttonText": "Go Ultimate"
+    },
+    "enterprise": {
+      "title": "Need a Custom Plan?",
+      "description": "For teams, studios, and enterprise solutions, contact us for a plan tailored to your specific needs.",
+      "buttonText": "Contact Sales"
+    },
+    "guarantee": "14-day money-back guarantee • No credit card required for free plan • Cancel anytime"
+  },
+  "MobileApp": {
+    "title": "SketchDojo in Your Pocket",
+    "subtitle": "Take your manga creation on the go with our mobile app. Get all the powerful features of SketchDojo in a beautifully designed mobile experience.",
+    "features": {
+      "feature1": "Create manga anywhere, anytime",
+      "feature2": "Optimized for touch interface",
+      "feature3": "Access your entire manga library",
+      "feature4": "Push notifications for new features",
+      "feature5": "Offline mode for creating without internet"
+    },
+    "downloadAppStore": "Download on the App Store",
+    "downloadGooglePlay": "Get it on Google Play"
+  },
+  "Partners": {
+    "title": "Works With Your Favorite Tools",
+    "subtitle": "SketchDojo integrates with popular design and publishing platforms to fit perfectly into your creative workflow.",
+    "trusted": "Trusted by creators around the world"
+  },
+  "Testimonials": {
+    "title": "What Our Users Say",
+    "subtitle": "Join thousands of creators who are bringing their manga ideas to life with SketchDojo."
+  },
+  "FAQ": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about SketchDojo and creating your own manga.",
+    "questions": {
+      "q1": {
+        "question": "What is SketchDojo?",
+        "answer": "SketchDojo is an AI-powered platform that transforms text descriptions into professional-quality manga art. It allows anyone, regardless of artistic skill, to create manga by simply describing what they want to see."
+      },
+      "q2": {
+        "question": "Do I need to know how to draw?",
+        "answer": "No, that's the beauty of SketchDojo! You don't need any drawing skills. Just describe what you want in your manga, and our AI will generate the visuals for you. You can then customize and refine as needed."
+      },
+      "q3": {
+        "question": "How does the AI generate manga?",
+        "answer": "Our AI uses advanced machine learning models trained on thousands of manga examples to understand your descriptions and generate appropriate visuals. It considers style, composition, characters, expressions, and more to create manga panels that match your vision."
+      }
+    },
+    "stillQuestions": "Still have questions? We're here to help!",
+    "contactSupport": "Contact Support"
+  },
+  "CTA": {
+    "startCreating": "Start Creating Today",
+    "title": "Turn Your Ideas Into Beautiful Manga in Seconds",
+    "subtitle": "Join thousands of creators who are bringing their stories to life with SketchDojo. No artistic skills required — just your imagination.",
+    "buttonCreate": "Create Your First Manga",
+    "buttonExamples": "See Examples",
+    "noCredit": "No credit card required • Free plan available • Cancel anytime"
+  },
+  "Footer": {
+    "product": "Product",
+    "resources": "Resources",
+    "company": "Company",
+    "newsletter": "Join our newsletter",
+    "emailPlaceholder": "Your email address",
+    "subscribe": "Subscribe",
+    "copyright": "© 2025 SketchDojo AI. All rights reserved."
   }
 }

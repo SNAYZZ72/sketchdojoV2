@@ -2,18 +2,66 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import LanguageSwitcher from '@/components/landing-page/language-switcher';
+import { Button } from "@/components/ui/button";
 
+// Animation variants
+const navItemVariants = {
+  hidden: { opacity: 0, y: -10 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.2 }
+  }
+};
+
+const mobileMenuVariants = {
+  hidden: { opacity: 0, y: -20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      duration: 0.3,
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  },
+  exit: { 
+    opacity: 0, 
+    y: -20,
+    transition: { duration: 0.2 }
+  }
+};
+
+const mobileItemVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.3 }
+  }
+};
+
+// Navigation items
+const navItems = [
+  { name: "Features", href: "/#features" },
+  { name: "How It Works", href: "/#how-it-works" },
+  { name: "Showcase", href: "/#showcase" },
+  // { name: "Mobile App", href: "/#mobile-app" },
+  { name: "Pricing", href: "/#pricing" },
+  // { name: "FAQ", href: "/#faq" }
+];
 
 export function Header() {
   const t = useTranslations('Navigation');
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   
@@ -77,12 +125,17 @@ export function Header() {
     if (href === "/") {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       window.history.pushState({}, '', '/');
-    } else {
-      const element = document.querySelector(href);
+    } else if (href.startsWith('/#')) {
+      const sectionId = href.substring(2);
+      const element = document.getElementById(sectionId);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        const offsetTop = element.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: offsetTop - 80, behavior: 'smooth' });
         window.history.pushState({}, '', href);
       }
+    } else {
+      // For external links, navigate normally
+      window.location.href = href;
     }
   };
 
@@ -126,6 +179,31 @@ export function Header() {
             </Link>
           </div>
 
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={(e) => scrollToSection(e, item.href)}
+                className="relative px-3 py-2 rounded-md text-gray-700 dark:text-white/80 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 text-sm"
+                onMouseEnter={() => setHoveredItem(item.name)}
+                onMouseLeave={() => setHoveredItem(null)}
+              >
+                {item.name}
+                {hoveredItem === item.name && (
+                  <motion.span 
+                    className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent rounded-full"
+                    layoutId="navbar-indicator"
+                    initial={{ width: 0 }}
+                    animate={{ width: '100%' }}
+                    transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                  />
+                )}
+              </Link>
+            ))}
+          </nav>
+
           {/* Right side actions */}
           <div className="flex items-center space-x-2 md:space-x-4">
             {/* Language Switcher */}
@@ -157,12 +235,14 @@ export function Header() {
                 <span className="relative z-10">{t('login')}</span>
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent transform origin-left transition-transform duration-300 scale-x-0 group-hover:scale-x-100"></span>
               </Link>
-              <Link 
-                href="/sign-up" 
-                className="py-2 px-4 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent text-white rounded-full font-medium text-sm transition-all duration-300 hover:shadow-lg hover:shadow-sketchdojo-primary/30 transform hover:-translate-y-0.5 hover:brightness-110"
+              <Button
+                asChild
+                className="bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent text-white rounded-full hover:shadow-lg hover:shadow-sketchdojo-primary/30 transform hover:-translate-y-0.5 hover:brightness-110"
               >
-                {t('signup')}
-              </Link>
+                <Link href="/sign-up">
+                  {t('signup')}
+                </Link>
+              </Button>
             </div>
 
             {/* Mobile Menu Button */}
@@ -200,22 +280,39 @@ export function Header() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            variants={mobileMenuVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             id="mobile-menu"
             className="md:hidden fixed inset-0 z-40 bg-white/95 dark:bg-black/95 backdrop-blur-lg"
             aria-label="Mobile navigation"
           >
-            <div className="min-h-screen flex flex-col justify-center items-center px-4 py-24 space-y-8">
+            <div className="min-h-screen flex flex-col justify-center items-center px-4 py-24 space-y-2">
+              {/* Mobile Navigation Items */}
+              {navItems.map((item) => (
+                <motion.div
+                  key={item.name}
+                  variants={mobileItemVariants}
+                  className="w-full text-center"
+                >
+                  <Link
+                    href={item.href}
+                    onClick={(e) => scrollToSection(e, item.href)}
+                    className="inline-block w-full py-3 text-lg text-gray-700 dark:text-white/90 hover:text-sketchdojo-primary transition-colors duration-300"
+                  >
+                    {item.name}
+                  </Link>
+                </motion.div>
+              ))}
+              
               {/* Mobile Language Switcher */}
-              <div className="mb-6">
+              <motion.div variants={mobileItemVariants} className="mb-6 mt-6">
                 <LanguageSwitcher />
-              </div>
+              </motion.div>
               
               {/* Mobile Auth Links */}
-              <div className="flex flex-col items-center space-y-6 w-full">
+              <motion.div variants={mobileItemVariants} className="flex flex-col items-center space-y-6 w-full">
                 <Link
                   href="/sign-in"
                   className="text-xl text-gray-700 dark:text-white/90 hover:text-sketchdojo-primary transition-colors duration-300 w-full text-center py-2"
@@ -233,7 +330,8 @@ export function Header() {
                 
                 {/* Mobile Theme Toggle */}
                 {mounted && (
-                  <button
+                  <motion.button
+                    variants={mobileItemVariants}
                     onClick={() => {
                       toggleTheme();
                       setIsMenuOpen(false);
@@ -252,13 +350,20 @@ export function Header() {
                         <span>Dark Mode</span>
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 )}
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Navbar Background Gradient Line */}
+      {scrolled && (
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-sketchdojo-primary/30 via-sketchdojo-accent/30 to-sketchdojo-primary/30"></div>
+      )}
     </header>
   );
 }
+
+export default Header;
