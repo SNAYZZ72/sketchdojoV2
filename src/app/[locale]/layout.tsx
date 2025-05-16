@@ -3,6 +3,7 @@ import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { AuthProvider } from '@/lib/providers/auth-provider'
+import { AIProvider } from '@/lib/providers/ai-provider'
 import type { Metadata } from 'next'
 import { Poppins, Italianno } from 'next/font/google'
 import { ThemeProvider } from '@/lib/providers/theme-provider'
@@ -60,7 +61,11 @@ export default async function LocaleLayout({
         <body className={`${poppins.className}`}>
          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
             <NextIntlClientProvider locale={locale} messages={messages}>
-                <AuthProvider>{children}</AuthProvider>
+                <AuthProvider>
+                    <AIProvider>
+                        {children}
+                    </AIProvider>
+                </AuthProvider>
             </NextIntlClientProvider>
           </ThemeProvider>
         </body>
