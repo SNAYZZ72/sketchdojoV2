@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
-import { ChevronLeft, ChevronRight, Home, Send } from 'lucide-react';
+import { Home, Send, Loader2, X, PanelLeft, PanelLeftClose } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useAI } from '@/lib/providers/ai-provider';
-import { ChatMessage as AIChatMessage } from '@/lib/types/chat';
 import { storeHtmlContent } from '@/lib/utils/chat-api';
-import { TaskStatus } from '@/lib/types/api';
+import ReactMarkdown from 'react-markdown';
 
 // Types for project data
 interface ProjectData {
@@ -21,16 +20,12 @@ export default function ProjectPage() {
   const { id } = useParams<{ id: string }>() || {};
   const searchParams = useSearchParams();
   const [projectData, setProjectData] = useState<ProjectData | null>(null);
-  const [taskId, setTaskId] = useState<string | null>(null);
-  const [taskStatus, setTaskStatus] = useState<TaskStatus | null>(null);
-  // No longer need tabs since we're only keeping Preview Mode
   const [chatExpanded, setChatExpanded] = useState(true);
   const [htmlContent, setHtmlContent] = useState<string>('');
   const [prompt, setPrompt] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [historyLoaded, setHistoryLoaded] = useState(false); // Track if chat history has been loaded
+  const [historyLoaded, setHistoryLoaded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const isInitialized = useRef(false); // Track if we've already initialized generation
+  const isInitialized = useRef(false);
   
   // AI Chat functionality
   const { messages, isLoading, sendMessage, loadChatHistory, lastToolResult, processingTools, htmlContent: aiHtmlContent, stopChat, isCancelled } = useAI();
@@ -134,148 +129,200 @@ export default function ProjectPage() {
     }
   };
   
-  // Render loading indicator
-  const renderLoading = () => {
-    if (!isLoading && !processingTools) return null;
-    
-    return (
-      <div className="w-full bg-sketchdojo-background-light rounded-full h-2.5 mb-4">
-        <div 
-          className="bg-sketchdojo-primary h-2.5 rounded-full transition-all duration-500 animate-pulse" 
-          style={{ width: '100%' }}
-        />
-      </div>
-    );
+  // Handle keyboard shortcuts
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Submit on Ctrl+Enter or Command+Enter
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      handleSubmit(e);
+    }
   };
-  
   return (
-    <div className="flex h-full w-full bg-sketchdojo-background">
-      {/* Left Panel: Chat */}
-      <div 
-        className={cn(
-          "flex flex-col h-full bg-sketchdojo-background-light transition-all duration-300",
-          chatExpanded ? "w-1/3" : "w-0"
-        )}
-      >
-        {chatExpanded && (
-          <>
-            {/* Chat Header */}
-            <div className="flex items-center justify-between p-4 border-b border-sketchdojo-background">
-              <div className="flex items-center space-x-2">
-                <h1 className="font-semibold text-lg text-white">{projectData?.projectName || 'SketchDojo'}</h1>
-              </div>
-              <div className="flex space-x-2">
-                <Button variant="ghost" size="icon" asChild>
-                  <a href="/" className="text-white hover:text-sketchdojo-primary">
-                    <Home size={20} />
-                  </a>
-                </Button>
-              </div>
-            </div>
-            
-            {/* Chat Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-white/60">
-                  <p>Start by describing what you want to create.</p>
-                </div>
-              ) : (
-                messages.map((message, index) => (
-                  <div key={index} className={cn(
-                    "p-3 rounded-lg max-w-[85%]",
-                    message.role === 'user' 
-                      ? "bg-sketchdojo-primary/20 ml-auto" 
-                      : message.role === 'function'
-                        ? "bg-sketchdojo-accent/20 mr-auto"
-                        : "bg-sketchdojo-background mr-auto"
-                  )}>
-                    {message.role === 'function' ? (
-                      <div>
-                        <p className="text-white/70 text-xs mb-1">Tool Result: {message.name}</p>
-                        <pre className="text-white text-xs overflow-auto max-h-40">{message.content}</pre>
-                      </div>
-                    ) : (
-                      <p className="text-white">{message.content}</p>
-                    )}
+    <div className="flex flex-col h-full w-full bg-gray-950">
+      {/* Header with simplified layout */}
+      <div className="flex items-center justify-between px-4 py-3 bg-gray-900 border-b border-gray-800 z-10">
+        <div className="flex items-center space-x-3">
+          {/* Home button */}
+          <Button variant="ghost" size="icon" asChild className="flex-shrink-0 text-white/70 hover:text-white hover:bg-gray-800">
+            <a href="/">
+              <Home size={18} />
+            </a>
+          </Button>
+          
+          {/* Project title - truncated for smaller screens */}
+          <h1 className="font-semibold text-white truncate max-w-[160px] sm:max-w-xs md:max-w-md">
+            {projectData?.projectName || 'SketchDojo Webtoon'}
+          </h1>
+        </div>
+        
+        {/* Toggle Chat button */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => setChatExpanded(!chatExpanded)}
+          className="flex-shrink-0 ml-2 text-white/70 hover:text-white hover:bg-gray-800"
+        >
+          {chatExpanded ? <PanelLeftClose size={18} /> : <PanelLeft size={18} />}
+        </Button>
+      </div>
+      
+      {/* Content Area - Adjusted for mobile */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Panel: Chat - Wider on mobile when expanded */}
+        <div 
+          className={cn(
+            "flex flex-col h-full border-r border-gray-800 transition-all duration-300",
+            chatExpanded ? "w-full sm:w-1/2 md:w-2/5 lg:w-1/3" : "w-0"
+          )}
+        >
+          {chatExpanded && (
+            <>
+              {/* Chat Messages */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-900">
+                {messages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                    <p className="text-center mb-2">Start by describing what you want to create</p>
+                    <p className="text-sm text-center text-gray-500 max-w-xs">
+                      Try "Create a cyberpunk manga about a detective in a neon-lit city"
+                    </p>
                   </div>
-                ))
-              )}
-              <div ref={messagesEndRef} />
-              
-              {/* Loading Indicator */}
-              {renderLoading()}
-            </div>
-            
-            {/* Message Input */}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-sketchdojo-background">
-              <div className="flex space-x-2">
-                <Textarea
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder="Describe your webtoon idea..."
-                  className="resize-none bg-sketchdojo-background text-white"
-                  disabled={loading}
-                />
-                {(isLoading || processingTools) ? (
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="destructive"
-                    className="rounded-full bg-red-500 hover:bg-red-600"
-                    onClick={() => stopChat()}
-                  >
-                    <span className="h-4 w-4">✕</span>
-                  </Button>
                 ) : (
-                  <Button 
-                    type="submit" 
-                    size="icon" 
-                    className="rounded-full bg-sketchdojo-primary hover:bg-sketchdojo-primary-hover"
-                    disabled={!prompt || isCancelled}
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
+                  messages.map((message, index) => (
+                    <div key={index} className={cn(
+                      "p-4 rounded-lg break-words",
+                      message.role === 'user' 
+                        ? "bg-sketchdojo-primary/20 border border-sketchdojo-primary/30 ml-auto max-w-[85%]" 
+                        : message.role === 'function'
+                          ? "bg-gray-800/70 border border-gray-700 mr-auto max-w-[85%]"
+                          : "bg-gray-800/70 border border-gray-700 mr-auto max-w-[85%]"
+                    )}>
+                      {message.role === 'function' ? (
+                        <div>
+                          <p className="text-gray-400 text-xs mb-2">Tool Result: {message.name}</p>
+                          <pre className="text-gray-300 text-xs overflow-auto max-h-40 whitespace-pre-wrap bg-gray-950/50 p-2 rounded">{message.content}</pre>
+                        </div>
+                      ) : (
+                        <div className="prose prose-invert prose-sm max-w-none prose-headings:text-white prose-p:text-gray-200 prose-a:text-sketchdojo-primary prose-code:bg-gray-950 prose-code:text-gray-300">
+                          <ReactMarkdown>{message.content}</ReactMarkdown>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+                <div ref={messagesEndRef} />
+                
+                {/* Loading Indicator */}
+                {(isLoading || processingTools) && (
+                  <div className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800/50 border border-gray-700 max-w-[85%]">
+                    <Loader2 className="w-4 h-4 animate-spin text-sketchdojo-primary" />
+                    <p className="text-sm text-gray-300">
+                      {processingTools ? "Processing your request..." : "Thinking..."}
+                    </p>
+                  </div>
                 )}
               </div>
-            </form>
-          </>
-        )}
-      </div>
-      
-      {/* Toggle Button */}
-      <button
-        onClick={() => setChatExpanded(!chatExpanded)}
-        className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-sketchdojo-primary hover:bg-sketchdojo-primary-light text-white rounded-r-md p-1"
-      >
-        {chatExpanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-      </button>
-      
-      {/* Right Panel: Webtoon Viewer */}
-      <div className={cn(
-        "h-full transition-all duration-300",
-        chatExpanded ? "w-2/3" : "w-full"
-      )}>
-        <div className="h-full flex flex-col">
-          {/* Viewer Header */}
-          <div className="flex items-center p-4 border-b border-sketchdojo-background-light">
-            <h2 className="text-white font-semibold">Webtoon Preview</h2>
-          </div>
-          
-          {/* Viewer Content */}
-          <div className="flex-1 overflow-auto bg-sketchdojo-background-light">
-            <div className="h-full">
-              {htmlContent ? (
-                <div 
-                  className="h-full overflow-y-auto bg-white text-black"
-                  dangerouslySetInnerHTML={{ __html: htmlContent }} 
-                />
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full text-white/60">
-                  <p>Ask the AI to create a webtoon for you!</p>
-                  <p className="mt-2 text-sm">Try saying: <span className="text-sketchdojo-primary">"Create a cyberpunk detective manga"</span></p>
+              
+              {/* Message Input */}
+              <div className="p-3 border-t border-gray-800 bg-gray-900">
+                <form onSubmit={handleSubmit} className="relative">
+                  <Textarea
+                    value={prompt}
+                    onChange={(e) => setPrompt(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Describe your webtoon idea..."
+                    className="resize-none bg-gray-800 text-white border-gray-700 focus:border-sketchdojo-primary focus:ring-sketchdojo-primary/20 rounded-lg pl-4 pr-12 py-3 min-h-[80px]"
+                    disabled={isLoading || processingTools || isCancelled}
+                  />
+                  
+                  <div className="absolute right-2 bottom-2">
+                    {(isLoading || processingTools) ? (
+                      <Button
+                        type="button"
+                        size="icon"
+                        variant="destructive"
+                        className="rounded-full w-8 h-8 bg-red-500/90 hover:bg-red-600"
+                        onClick={() => stopChat()}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    ) : (
+                      <Button 
+                        type="submit" 
+                        size="icon"
+                        className="rounded-full w-8 h-8 bg-gradient-to-r from-sketchdojo-primary to-sketchdojo-accent hover:brightness-110 text-white shadow-md"
+                        disabled={!prompt.trim() || isCancelled}
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </form>
+                
+                <div className="mt-2 text-xs text-gray-500 flex justify-between">
+                  {isCancelled ? (
+                    <span className="text-red-400">Generation stopped. Send a new message to continue.</span>
+                  ) : (
+                    <span className="hidden sm:inline">Press <kbd className="px-1 py-0.5 rounded bg-gray-800 text-gray-300">Ctrl</kbd>+<kbd className="px-1 py-0.5 rounded bg-gray-800 text-gray-300">Enter</kbd> to send</span>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            </>
+          )}
+        </div>
+        
+        {/* Right Panel: Webtoon Viewer - Adjusted for mobile */}
+        <div className={cn(
+          "h-full transition-all duration-300",
+          chatExpanded ? "hidden sm:block sm:w-1/2 md:w-3/5 lg:w-2/3" : "w-full"
+        )}>
+          <div className="h-full overflow-auto bg-white">
+            {htmlContent ? (
+              <div className="h-full overflow-y-auto">
+                {/* Iframe to isolate HTML content styles */}
+                <iframe
+                  srcDoc={`
+                    <!DOCTYPE html>
+                    <html>
+                      <head>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <style>
+                          body { margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+                          img { max-width: 100%; height: auto; }
+                        </style>
+                      </head>
+                      <body>
+                        ${htmlContent}
+                      </body>
+                    </html>
+                  `}
+                  className="w-full h-full border-none"
+                  title="Webtoon Preview"
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full bg-gray-950 text-gray-400">
+                <div className="w-16 h-16 mb-4 rounded-full bg-gray-800/50 flex items-center justify-center">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sketchdojo-primary">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                  </svg>
+                </div>
+                <p className="text-center mb-2">Your webtoon will appear here</p>
+                <p className="text-sm text-center text-gray-500 max-w-xs mb-6">
+                  Describe what you want to create in the chat panel
+                </p>
+              </div>
+            )}
+            
+            {/* Loading overlay */}
+            {(isLoading || processingTools) && !htmlContent && (
+              <div className="absolute inset-0 bg-gray-900/80 flex flex-col items-center justify-center z-10">
+                <div className="w-14 h-14 rounded-full border-4 border-sketchdojo-primary/20 border-t-sketchdojo-primary animate-spin mb-4"></div>
+                <p className="text-white font-medium">Generating your webtoon...</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -2,7 +2,14 @@
 
 import React, { createContext, useContext, useState, useCallback, ReactNode, useEffect } from 'react';
 import { ChatMessage, ToolCall, ToolCallResponse, ChatResponse } from '../types/chat';
-import { sendChatMessage, executeToolCall, getChatHistory, ProjectHistoryResponse } from '../utils/chat-api';
+import { 
+  sendChatMessage, 
+  executeToolCall, 
+  getChatHistory, 
+  ProjectHistoryResponse,
+  API_BASE_URL,
+  STATIC_BASE_URL
+} from '../utils/chat-api';
 
 interface AIContextType {
   messages: ChatMessage[];
@@ -175,6 +182,10 @@ export function AIProvider({ children }: { children: ReactNode }) {
     setProcessingTools(true);
     setToolCallCount(prev => prev + 1);
     
+    // Track errors for each tool call
+    let consecutiveErrors = 0;
+    const MAX_ERROR_RETRIES = 2; // Maximum consecutive errors allowed per tool
+    
     try {
       for (const toolCall of toolCalls) {
         // Add a message indicating the tool is being executed
@@ -187,56 +198,128 @@ export function AIProvider({ children }: { children: ReactNode }) {
           }
         ]);
         
-        // Execute the tool call
-        const result = await executeToolCall(toolCall, projectId);
-        
-        // Add the function result as a message
-        setMessages(prev => [
-          ...prev,
-          {
+        try {
+          // Execute the tool call
+          const result = await executeToolCall(toolCall, projectId);
+          
+          // Reset consecutive error counter on success
+          consecutiveErrors = 0;
+          
+          // Check if the result contains an error
+          if (result.result?.error) {
+            // Format the error message in a more user-friendly way
+            const errorMessage = {
+              role: 'assistant' as const,
+              content: `I encountered an error while processing your request: ${result.result.error.split('\n')[0]}\n\nPlease try again with a different prompt or wording.`,
+              timestamp: new Date()
+            };
+            
+            setMessages(prev => [...prev, errorMessage]);
+            
+            // Don't continue processing if we got an error
+            setProcessingTools(false);
+            setIsLoading(false);
+            return;
+          }
+          
+          // Add a function message for the result
+          const functionMessage = {
             role: 'function' as const,
-            content: typeof result.result === 'string' 
-              ? result.result 
-              : JSON.stringify(result.result, null, 2),
             name: toolCall.name,
-            tool_call_id: toolCall.id,
+            content: JSON.stringify(result.result, null, 2),
             timestamp: new Date()
-          } as ChatMessage
-        ]);
-        
-        // Store the last tool result
-        setLastToolResult(result.result);
-        
-        // If this is a webtoon generation task, start polling for status
-        if (toolCall.name === 'generate_webtoon' && result.result?.task_id) {
-          pollTaskStatus(result.result.task_id);
-        }
-        
-        // Now send another message to the AI with the tool result
-        const updatedMessages = [
-          ...messages,
-          {
-            role: 'function' as const, // Use const assertion to ensure literal type
-            content: typeof result.result === 'string'
-              ? result.result
-              : JSON.stringify(result.result, null, 2),
-            name: toolCall.name,
-            tool_call_id: toolCall.id
-          } as ChatMessage // Cast to ChatMessage to ensure type safety
-        ];
-        
-        // Get AI's response to the tool result
-        const toolResponse = await sendChatMessage(updatedMessages, projectId);
-        
-        // Add the AI's response to our messages
-        setMessages(prev => [
-          ...prev,
-          toolResponse.message
-        ]);
-        
-        // Process any new tool calls that might be in the response
-        if (toolResponse.tool_calls && toolResponse.tool_calls.length > 0) {
-          await processToolCalls(toolResponse.tool_calls, projectId);
+          };
+          
+          // Add message to the chat
+          setMessages(prev => [...prev, functionMessage]);
+          
+          // Store the last tool result
+          setLastToolResult(result.result);
+          
+          // If there's a fallback HTML content due to error, we should still display it
+          if (result.result?.fallback && result.result?.html_path) {
+            // Add a message explaining the fallback
+            setMessages(prev => [...prev, {
+              role: 'assistant' as const,
+              content: 'I had some trouble generating exactly what you asked for, but I created a simple version instead. Please try again with a different prompt if this isn\'t what you wanted.',
+              timestamp: new Date()
+            }]);
+            
+            // Get the HTML content from the fallback path
+            try {
+              // Use STATIC_BASE_URL since this is a static file, not an API endpoint
+              const response = await fetch(`${STATIC_BASE_URL}/${result.result.html_path}`);
+              if (response.ok) {
+                const html = await response.text();
+                setHtmlContent(html);
+              }
+            } catch (error) {
+              console.error('Error fetching fallback HTML:', error);
+            }
+            
+            setProcessingTools(false);
+            setIsLoading(false);
+            return;
+          }
+          
+          // If this is a webtoon generation task, start polling for status
+          if (toolCall.name === 'generate_webtoon' && result.result?.task_id) {
+            pollTaskStatus(result.result.task_id);
+          }
+          
+          // Now send another message to the AI with the tool result
+          const updatedMessages = [
+            ...messages,
+            {
+              role: 'function' as const, // Use const assertion to ensure literal type
+              content: JSON.stringify(result.result, null, 2),
+              name: toolCall.name,
+              tool_call_id: toolCall.id
+            } as ChatMessage // Cast to ChatMessage to ensure type safety
+          ];
+          
+          // Get AI's response to the tool result
+          const toolResponse = await sendChatMessage(updatedMessages, projectId);
+          
+          // Add the AI's response to our messages
+          setMessages(prev => [
+            ...prev,
+            toolResponse.message
+          ]);
+          
+          // Process any new tool calls that might be in the response
+          if (toolResponse.tool_calls && toolResponse.tool_calls.length > 0) {
+            await processToolCalls(toolResponse.tool_calls, projectId);
+          }
+        } catch (error) {
+          console.error(`Error executing tool ${toolCall.name}:`, error);
+          
+          // Increment consecutive errors counter
+          consecutiveErrors++;
+          
+          // If we've had too many errors with this tool, stop processing
+          if (consecutiveErrors >= MAX_ERROR_RETRIES) {
+            // Add a more descriptive error message to the chat
+            setMessages(prev => [...prev, {
+              role: 'assistant',
+              content: `I'm having trouble with the ${toolCall.name} tool. This might be due to an issue with your request format. Please try rephrasing your request or using different wording.\n\nError details: ${error}`,
+              timestamp: new Date()
+            } as ChatMessage]);
+            
+            setProcessingTools(false);
+            setIsLoading(false);
+            return;
+          }
+          
+          // If we haven't exceeded max retries, add a simple error message
+          setMessages(prev => [...prev, {
+            role: 'assistant',
+            content: `I encountered an error while executing ${toolCall.name}. I'll try a different approach.`,
+            timestamp: new Date()
+          } as ChatMessage]);
+          
+          // Continue to the next tool since we're still under the retry limit
+          continue;
         }
       }
     } catch (err) {

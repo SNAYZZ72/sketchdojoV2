@@ -11,7 +11,8 @@ import {
 
 // The server base URL with API prefix
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
-const API_BASE_URL = `${BASE_URL}/api`;
+export const API_BASE_URL = `${BASE_URL}/api`;
+export const STATIC_BASE_URL = BASE_URL;
 
 /**
  * Handle errors from API calls
