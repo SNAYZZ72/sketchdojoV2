@@ -279,21 +279,7 @@ export default function ProjectPage() {
               <div className="h-full overflow-y-auto">
                 {/* Iframe to isolate HTML content styles */}
                 <iframe
-                  srcDoc={`
-                    <!DOCTYPE html>
-                    <html>
-                      <head>
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <style>
-                          body { margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-                          img { max-width: 100%; height: auto; }
-                        </style>
-                      </head>
-                      <body>
-                        ${htmlContent}
-                      </body>
-                    </html>
-                  `}
+                  srcDoc={htmlContent}
                   className="w-full h-full border-none"
                   title="Webtoon Preview"
                 />
